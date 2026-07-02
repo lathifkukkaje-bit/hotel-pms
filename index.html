@@ -1,10 +1,3134 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
-  <title>Hotel PMS</title>
+  <meta charset="utf-8">
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap" rel="stylesheet">
+  <style>
+    .bill-mode-dot {
+  width: 11px;
+  height: 11px;
+  background: #ff9800;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 0 4px rgba(255,152,0,.18);
+}
+    .login-screen {
+  position: fixed;
+  inset: 0;
+  background: #0b3150;
+  z-index: 200000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.login-box {
+  width: 100%;
+  max-width: 380px;
+  background: white;
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: 0 25px 80px rgba(0,0,0,.35);
+}
+
+.login-box h2 {
+  margin: 0 0 6px;
+  color: #0b3150;
+  text-align: center;
+}
+
+.login-box p {
+  margin: 0 0 22px;
+  color: #697386;
+  text-align: center;
+}
+
+.login-box label {
+  margin-bottom: 14px;
+}
+
+.login-box .btn {
+  width: 100%;
+  margin-top: 6px;
+}
+
+.login-error {
+  margin-top: 14px;
+  color: #c5221f;
+  text-align: center;
+  font-weight: 700;
+}
+.success-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.35);
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.success-card {
+  width: 360px;
+  background: white;
+  border-radius: 18px;
+  padding: 34px 28px;
+  text-align: center;
+  box-shadow: 0 25px 70px rgba(0,0,0,.25);
+  animation: successPop .35s ease both;
+  position: relative;
+  overflow: hidden;
+}
+
+.success-ring {
+  width: 110px;
+  height: 110px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  background: #c9f7e8;
+  display: grid;
+  place-items: center;
+}
+
+.success-check {
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  background: #10c98b;
+  color: white;
+  display: grid;
+  place-items: center;
+  font-size: 42px;
+  font-weight: 800;
+  animation: checkPop .45s ease .15s both;
+}
+
+.success-card h2 {
+  font-size: 26px;
+  margin: 0 0 8px;
+  color: #111827;
+}
+
+.success-card p {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.confetti span {
+  position: absolute;
+  top: -20px;
+  left: var(--x);
+  width: 7px;
+  height: 14px;
+  background: var(--c);
+  animation: confettiFall 1.5s linear var(--d) infinite;
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translateY(-20px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(430px) rotate(420deg);
+    opacity: .8;
+  }
+}
+
+@keyframes successPop {
+  from {
+    transform: scale(.92);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes checkPop {
+  from {
+    transform: scale(.4);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+    .page-loader {
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,.65);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader-box {
+  background: white;
+  border: 1px solid #d9e1ec;
+  border-radius: 14px;
+  padding: 28px 34px;
+  min-width: 180px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.22);
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+}
+
+.green-spinner {
+  width: 54px;
+  height: 54px;
+  border: 6px solid #d7f7df;
+  border-top-color: #0f9f4d;
+  border-radius: 50%;
+  animation: greenSpin .75s linear infinite;
+}
+
+.loader-text {
+  color: #0f7a3a;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+@keyframes greenSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+    .btn.loading-btn {
+  position: relative;
+  pointer-events: none;
+  opacity: .85;
+  padding-left: 42px;
+}
+
+.btn.loading-btn::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  margin-top: -8px;
+  border: 2px solid rgba(255,255,255,.45);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin .75s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+    body{margin:0;background:#f5f7fb;color:#17202a;font-family:'Nunito Sans',Arial,sans-serif}
+    *{box-sizing:border-box}
+    button,input,select,textarea{font:inherit}
+    .app{min-height:100vh;display:grid;grid-template-columns:260px 1fr}
+    .side{background:#0b3150;color:white;padding:22px 18px}
+    .brand{border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:18px;margin-bottom:18px}
+    .brand h1{font-size:20px;margin:0 0 8px}
+    .brand p{font-size:13px;line-height:1.4;color:rgba(255,255,255,.75);margin:0}
+    .nav{display:grid;gap:8px}
+    .nav button{border:0;border-radius:8px;background:transparent;color:rgba(255,255,255,.85);padding:12px;text-align:left;cursor:pointer}
+    .nav button.active,.nav button:hover{background:rgba(255,255,255,.14);color:white}
+    .main{padding:24px;overflow:auto}
+    .top{display:flex;justify-content:space-between;gap:16px;margin-bottom:20px}
+    h2{margin:0 0 6px;font-size:24px}
+    .muted{color:#697386;margin:0}
+    .grid{display:grid;gap:16px}
+    .metrics{grid-template-columns:repeat(9,minmax(130px,1fr))}
+    .metric,.panel{background:white;border:1px solid #d9e1ec;border-radius:8px}
+    .metric{padding:16px}
+    .metric span{display:block;color:#697386;font-size:12px;margin-bottom:8px}
+    .metric strong{font-size:22px}
+    .metric.metric-action{cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+    .metric.metric-action:hover,.metric.metric-action:focus{transform:translateY(-2px);border-color:#0f5d97;box-shadow:0 10px 24px rgba(15,93,151,.14);outline:0}
+    .metric.metric-action span::after{content:'  View details';color:#0f5d97;font-size:10px;font-weight:800}
+    .panel{padding:18px}
+    h3{margin:0 0 14px;font-size:17px}
+    .btn{border:0;border-radius:8px;background:#0f5d97;color:white;padding:10px 14px;font-weight:700;cursor:pointer}
+    .btn.secondary{background:#eaf1f8;color:#0f5d97}
+    .btn.danger{background:#c5221f;color:white}
+    .btn.small{padding:7px 9px;font-size:12px}
+    .form{display:grid;grid-template-columns:repeat(4,minmax(160px,1fr));gap:14px}
+    label{display:grid;gap:6px;color:#697386;font-size:12px;font-weight:700}
+    input,select,textarea{width:100%;border:1px solid #d9e1ec;border-radius:8px;padding:10px;background:white}
+    textarea{min-height:42px;resize:vertical}
+    .span2{grid-column:span 2}
+    .table-wrap{overflow:auto;border:1px solid #d9e1ec;border-radius:8px}
+    table{width:100%;border-collapse:collapse;min-width:1300px;background:white}
+    th,td{padding:10px 11px;border-bottom:1px solid #d9e1ec;text-align:left;white-space:nowrap;font-size:13px}
+    th{background:#eef4fa;color:#24384c;font-weight:800}
+    .status{display:inline-flex;border-radius:999px;padding:4px 9px;font-size:12px;font-weight:800}
+    .available{background:#d7f7df;color:#047a2c}
+    .Checked{background:#ffe1e1;color:#c00000;}
+    .uncleaned{background:#e4efff;color:#0b57d0}
+    .vacated{background:#eef1f5;color:#536171}
+    .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+    .filters input,.filters select{max-width:230px}
+   .hidden {
+  display: none !important;
+}
+
+.modal-backdrop.hidden {
+  display: none !important;
+}
+    .toast{position:fixed;right:22px;bottom:22px;background:#17202a;color:white;border-radius:8px;padding:13px 15px;box-shadow:0 12px 30px rgba(0,0,0,.24);z-index:10}
+    .loading{opacity:.6;pointer-events:none}
+.room-grid{
+  display:grid;
+  grid-template-columns:repeat(8,minmax(100px,1fr));
+  gap:10px;
+}
+
+.room-card{
+  min-height:96px;
+  border:0;
+  border-radius:13px;
+  display:grid;
+  grid-template-rows:1fr auto;
+  align-items:center;
+  padding:14px 12px 10px;
+  font-size:16px;
+  font-weight:800;
+  transition:transform .18s ease,box-shadow .18s ease;
+}
+.room-card-number{text-align:center;align-self:center}
+.room-card-meta{
+  width:100%;
+  padding-top:8px;
+  border-top:1px solid currentColor;
+  opacity:.72;
+  text-align:center;
+  font-size:11px;
+  font-weight:700;
+  line-height:1.2;
+}
+.room-card.available{background:#e2f3ec;color:#159b68}
+.room-card.occupied{background:#fde4e4;color:#d93025}
+.room-card.cleaning{background:#e1edfb;color:#0873df}
+.room-card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 24px rgba(15,49,80,.14);
+}
+.room-status-head{display:flex;align-items:start;justify-content:space-between;gap:16px;margin-bottom:22px}
+.room-status-head h3{margin:0 0 6px;font-size:20px}
+.room-status-legend{display:flex;gap:22px;flex-wrap:wrap;margin-top:20px;color:#697386;font-size:13px}
+.room-status-legend span{display:inline-flex;align-items:center;gap:7px}
+.room-status-legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.legend-available{background:#20a66a}.legend-occupied{background:#e53935}.legend-cleaning{background:#0873df}
+@media(max-width:1300px){.room-grid{grid-template-columns:repeat(6,1fr)}}
+@media(max-width:1100px){.room-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:700px){.room-grid{grid-template-columns:repeat(2,1fr)}.room-status-head{display:block}}
+@media(max-width:420px){.room-grid{grid-template-columns:1fr}}
+}
+
+.room-body{
+  padding:12px;
+  display:grid;
+  gap:8px;
+}
+
+.room-title{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+}
+
+.room-title strong{
+  font-size:16px;
+}
+
+.room-meta{
+  color:#697386;
+  font-size:12px;
+  line-height:1.4;
+}
+
+.room-price{
+  font-weight:800;
+  color:#0b3150;
+}
+    .room-info small{color:#697386;white-space:normal;line-height:1.3}
+    .room-info .status{border-radius:2px;padding:5px 8px}
+    @media(max-width:980px){.app{grid-template-columns:1fr}.metrics,.form{grid-template-columns:repeat(2,1fr)}.nav{grid-template-columns:repeat(5,1fr)}}
+    @media(max-width:640px){.main{padding:16px}.top{display:grid}.metrics,.form,.nav{grid-template-columns:1fr}.span2{grid-column:span 1}}
+    .status.checked,
+.room-card .status.checked,
+td .status.checked{
+  background:#ff0000 !important;
+  color:#ffffff !important;
+  border-radius:999px !important;
+  padding:5px 10px !important;
+  font-weight:800 !important;
+}
+
+.status.available,
+.room-card .status.available,
+td .status.available{
+  background:#d7f7df !important;
+  color:#047a2c !important;
+}
+.modal-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.45);
+  z-index:999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.detail-modal{
+  width:100%;
+  max-width:520px;
+  background:#fff;
+  border-radius:10px;
+  box-shadow:0 20px 50px rgba(0,0,0,.25);
+  overflow:hidden;
+}
+
+.detail-modal-header{
+  background:#0b3150;
+  color:white;
+  padding:16px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.detail-modal-header h3{
+  margin:0;
+  font-size:18px;
+}
+
+.detail-close{
+  border:0;
+  background:transparent;
+  color:white;
+  font-size:24px;
+  cursor:pointer;
+}
+
+.detail-modal-body{
+  padding:18px 20px;
+  display:grid;
+  gap:10px;
+  max-height:65vh;
+  overflow:auto;
+}
+
+.detail-row{
+  display:grid;
+  grid-template-columns:150px 1fr;
+  gap:12px;
+  border-bottom:1px solid #eef1f5;
+  padding-bottom:8px;
+}
+
+.detail-row span{
+  color:#697386;
+  font-weight:700;
+}
+
+.detail-row strong{
+  color:#17202a;
+}
+
+.detail-modal-footer{
+  padding:14px 20px;
+  background:#f5f7fb;
+  text-align:right;
+}
+.room-card,
+.btn {
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.room-card:hover {
+  transform: scale(1.04);
+  box-shadow: 0 14px 34px rgba(15,49,80,.22);
+  z-index: 2;
+}
+
+#status .room-card:hover {
+  transform: translateY(-2px);
+}
+
+.room-img {
+  transition: transform .22s ease;
+}
+
+.room-card:hover .room-img {
+  transform: scale(1.06);
+}
+
+.btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 18px rgba(15,93,151,.25);
+}
+  
+/* One-hour vacate notification */
+.notify-wrap{position:relative;display:inline-flex;align-items:center}
+.bell-btn{border:0;background:#fff;color:#c5221f;border-radius:999px;width:42px;height:42px;font-size:22px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.12);position:relative}
+.bell-count{position:absolute;right:-4px;top:-4px;background:#e53935;color:#fff;border-radius:999px;min-width:20px;height:20px;font-size:12px;font-weight:800;display:none;align-items:center;justify-content:center;padding:0 5px}
+.bell-count.show{display:flex}
+.notify-panel{position:absolute;right:0;top:50px;width:340px;max-height:360px;overflow:auto;background:white;border:1px solid #d9e1ec;border-radius:12px;box-shadow:0 18px 50px rgba(0,0,0,.22);z-index:9999;padding:12px}
+.notify-item{border-bottom:1px solid #eef1f5;padding:10px 6px}.notify-item:last-child{border-bottom:0}.notify-item strong{color:#c5221f}
+.amount-preview{background:#f8fafc;border:1px dashed #cbd5e1;border-radius:8px;padding:10px;font-weight:800;color:#0b3150}
+
+/* Payment popup proper alignment */
+.payment-modal{
+  max-width:720px !important;
+}
+.payment-form{
+  padding:18px 20px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(220px,1fr));
+  gap:14px;
+}
+.payment-form label{
+  min-width:0;
+}
+.payment-form .payment-full{
+  grid-column:1 / -1;
+}
+.payment-form .payment-actions{
+  grid-column:1 / -1;
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  padding-top:4px;
+}
+.payment-form textarea{
+  min-height:76px;
+}
+@media(max-width:720px){
+  .payment-modal{max-width:96vw !important;}
+  .payment-form{grid-template-columns:1fr;}
+}
+
+
+.dashboard-split{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+.dashboard-split .table-wrap table{min-width:0}
+.dashboard-split th,.dashboard-split td{white-space:normal}
+@media(max-width:980px){.dashboard-split{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-  <h1>Hotel Fusion Suites PMS</h1>
-  <p>Website deployed successfully.</p>
+<div id="loginScreen" class="login-screen">
+  <div class="login-box">
+    <h2>Hotel Fusion Suites</h2>
+    <p>Admin Login</p>
+
+    <label>User ID
+      <input id="loginUser" type="text" value="ADMIN">
+    </label>
+
+    <label>Password
+      <input id="loginPass" type="password" value="">
+    </label>
+
+    <button class="btn" id="loginButton" type="button">Login</button>
+
+    <div id="loginError" class="login-error hidden">Invalid User ID or Password</div>
+  </div>
+</div>
+<div id="app" class="app hidden">
+  <aside class="side">
+    <div class="brand">
+      <h1 id="hotelName">Hotel Fusion Suites</h1>
+      <p id="hotelAddress"></p>
+    </div>
+    <div class="nav">
+      <button class="active" data-view="dashboard">Dashboard</button>
+      <button data-view="checkin">Check In</button>
+      <button data-view="status">Room Status</button>
+      <button data-view="invoice">Tax Invoice</button>
+      <button data-view="Reservation">Reservation</button>
+      <button id="gstNavBtn" data-view="gst">GST Report</button>
+      <button data-view="payments">Payments</button>
+      <button id="historyNavBtn" data-view="history" class="hidden">History</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="top">
+      <div>
+        <h2 id="title">Check-in Dashboard</h2>
+        <p id="updated" class="muted">Loading...</p>
+      </div>
+<div style="display:flex;gap:10px;align-items:center">
+  <span id="billModeDot" class="bill-mode-dot hidden"></span>
+  <div class="notify-wrap">
+    <button type="button" class="bell-btn" onclick="toggleVacateNotifications()">🔔<span id="bellCount" class="bell-count">0</span></button>
+    <div id="notifyPanel" class="notify-panel hidden"></div>
+  </div>
+  <button class="btn secondary" onclick="loadData()">Refresh</button>
+  <button class="btn danger" onclick="logoutApp()">Logout</button>
+</div>
+    </div>
+
+    <section id="dashboard" class="grid">
+      <div class="grid metrics">
+        <div class="metric"><span>Total Rooms</span><strong id="mTotal">0</strong></div>
+        <div class="metric"><span>Available</span><strong id="mAvailable">0</strong></div>
+        <div class="metric"><span>Occupied</span><strong id="mOccupied">0</strong></div>
+        <div class="metric metric-action" role="button" tabindex="0" onclick="openDashboardMetricDetails('checkins')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openDashboardMetricDetails('checkins')}"><span>Today Check-ins</span><strong id="mToday">0</strong></div>
+        <div class="metric"><span>Due Check-outs</span><strong id="mDue">0</strong></div>
+        <div class="metric"><span>Active Revenue</span><strong id="mRevenue">0</strong></div>
+        <div class="metric"><span>Today's Revenue</span><strong id="mTodayRevenue">0</strong></div>
+        <div class="metric metric-action" role="button" tabindex="0" onclick="openDashboardMetricDetails('balance')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openDashboardMetricDetails('balance')}"><span>Outstanding</span><strong id="mOutstanding">0</strong></div>
+        <div class="metric"><span>Month GST</span><strong id="mMonthGst">0</strong></div>
+      </div>
+      <div class="dashboard-split">
+        <div class="panel">
+          <h3>Vacate in One Hour Details</h3>
+          <div id="dashboardVacateDetails" class="table-wrap"></div>
+        </div>
+        <div class="panel">
+          <h3>Reservation Details</h3>
+          <div id="dashboardReservationDetails" class="table-wrap"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="checkin" class="grid hidden">
+      <div class="panel">
+        <h3>New Check-in</h3>
+        <form id="checkinForm" class="form">
+          <input type="hidden" name="invoiceType" id="invoiceType" value="GST">
+          <label>Guest Name<input name="guestName" required></label>
+          <label>Mobile No<input name="mobile" required></label>
+          <label>GSTIN Optional<input name="gstin" id="gstinInput" maxlength="15" oninput="fillStateFromGstin()"></label>
+          <label>State<input name="state" id="stateInput" required></label>
+          <label class="span2">Address<textarea name="address" required></textarea></label>
+          <label>Booking Mode<select name="bookingMode" id="bookingModeSelect"></select></label>
+          <label>Room No<select name="roomNo" id="roomSelect" required></select></label>
+          <label>Room Price
+  <input name="manualPrice" id="manualPrice" type="number" min="0" required>
+</label>
+          <label>Adults<input name="adults" type="number" min="1" value="1" required></label>
+          <label>Children<input name="children" type="number" min="0" value="0"></label>
+          <label>No. of Days<input name="noOfDays" type="number" min="1" value="1" required></label>
+          <label>Extra Days<input name="extraDays" type="number" min="0" value="0"></label>
+          <label>Early Check-in Charges<input name="earlyCheckInCharges" type="number" min="0" value="0"></label>
+          <label>Late Checkout Charges<input name="lateCheckoutCharges" type="number" min="0" value="0"></label>
+          <label>Room Service Charges<input name="roomServiceCharges" type="number" min="0" value="0"></label>
+          <label>Laundry Charges<input name="laundryCharges" type="number" min="0" value="0"></label>
+          <label>Food Charges<input name="foodCharges" type="number" min="0" value="0"></label>
+          <label>Water Charges<input name="waterCharges" type="number" min="0" value="0"></label>
+          <label>Extra Person Charges<input name="extraPersonCharges" type="number" min="0" value="0"></label>
+          <label>Advance Amount<input name="advanceAmount" type="number" min="0" value="0"></label>
+          <label>Payment Mode<select name="paymentMode"><option>Cash</option><option>UPI</option><option>Card</option><option>Bank</option><option>Other</option></select></label>
+          <div><button class="btn" id="saveCheckBtn" type="submit">Save Check In</button></div>
+        </form>
+      </div>
+
+      <div class="panel">
+        <h3>Check-in Report</h3>
+        <div class="filters">
+          <input id="reportSearch" placeholder="Search guest, room, mobile" oninput="renderReports()">
+          <input id="reportDate" type="date" onchange="renderReports()">
+          <input id="reportMonth" type="month" onchange="renderReports()">
+          <select id="reportStatus" onchange="renderReports()">
+            <option value="">All Status</option>
+            <option value="Checked">Checked</option>
+            <option value="VACATED BUT NOT CLEANED">Vacated But Not Cleaned</option>
+            <option value="VACATED">Vacated</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+<tr>
+  <th>Guest</th>
+  <th>Mobile</th>
+  <th>Mode</th>
+  <th>Room</th>
+  <th>Type</th>
+  <th>Price</th>
+  <th>Advance</th>
+  <th>Balance</th>
+  <th>Status</th>
+  <th>Action</th>
+</tr>
+            </thead>
+            <tbody id="reportRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="status" class="grid hidden">
+      <div class="panel">
+        <div class="room-status-head">
+          <div><h3>Room overview</h3><p class="muted">Live room status by number</p></div>
+        </div>
+        <div class="filters">
+          <select id="floorFilter" onchange="renderStatus()"><option value="">All Floors</option></select>
+          <select id="typeFilter" onchange="renderStatus()"><option value="">All Types</option></select>
+          <select id="statusFilter" onchange="renderStatus()">
+            <option value="">All Status</option>
+            <option value="AVAILABLE">Available</option>
+            <option value="CHECKED">Occupied</option>
+            <option value="VACATED BUT NOT CLEANED">Cleaning</option>
+          </select>
+        </div>
+        <div id="statusRows" class="room-grid"></div>
+        <div class="room-status-legend">
+          <span><i class="legend-available"></i>Available</span>
+          <span><i class="legend-occupied"></i>Occupied</span>
+          <span><i class="legend-cleaning"></i>Cleaning</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="invoice" class="grid hidden">
+      <div class="panel">
+        <h3>Tax Invoice</h3>
+        <div class="filters">
+          <input id="invoiceSearch" placeholder="Search guest, room, mobile" oninput="renderInvoices()">
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Guest</th><th>Mobile</th><th>Room</th><th>Invoice No</th><th>Total</th>
+                <th>Advance</th><th>Balance</th><th>Status</th><th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="invoiceRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+
+    <section id="payments" class="grid hidden">
+      <div class="panel">
+        <h3>Payment Received Report</h3>
+        <div class="filters">
+          <input id="paymentSearch" placeholder="Search guest, room, mode" oninput="renderPayments()">
+          <input id="paymentDate" type="date" onchange="renderPayments()">
+          <input id="paymentMonth" type="month" onchange="renderPayments()">
+        </div>
+        <div class="amount-preview">Total Payment Received: <span id="paymentTotal">₹0</span></div><br>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Date</th><th>Guest</th><th>Room</th><th>Type</th><th>Mode</th><th>Amount</th><th>Note</th></tr></thead>
+            <tbody id="paymentRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="gst" class="grid hidden">
+      <div class="panel">
+        <h3 id="gstReportTitle">Monthly GST / Sales Report</h3>
+        <div class="filters">
+          <input id="gstReportSearch" placeholder="Search guest, room, invoice" oninput="renderGstReport()">
+          <input id="gstReportDate" type="date" onchange="renderGstReport()">
+          <input id="gstReportMonth" type="month" onchange="renderGstReport()">
+        </div>
+        <button class="btn secondary small" onclick="exportGstExcel()">Export Excel</button>
+        <div class="table-wrap">
+          <table>
+<thead>
+  <tr>
+    <th>Date</th>
+    <th>Invoice No</th>
+    <th>Guest</th>
+    <th>Room</th>
+    <th>Taxable Value</th>
+    <th>CGST</th>
+    <th>SGST</th>
+    <th>IGST</th>
+    <th>Total GST</th>
+    <th>Grand Total</th>
+  </tr>
+</thead>
+            <tbody id="gstReportRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    <section id="history" class="grid hidden">
+  <div class="panel">
+    <h3>Vacated History</h3>
+    <div class="filters">
+      <input id="historySearch" placeholder="Search guest, room, mobile" oninput="renderHistory()">
+      <input id="historyDate" type="date" title="Vacated date" onchange="renderHistory()">
+      <input id="historyMonth" type="month" title="Vacated month" onchange="renderHistory()">
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Guest</th><th>Mobile</th><th>Mode</th><th>Room</th><th>Type</th>
+            <th>Vacated Date</th><th>Total</th><th>Balance</th><th>Status</th><th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="historyRows"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+<section id="Reservation" class="hidden">
+  <div class="panel">
+    <h3>New Reservation</h3>
+
+    <form id="ReservationForm" class="form">
+      <input type="hidden" name="bookingId" id="ReservationBookingId" value="">
+      <label>Guest Name
+        <input name="guestName" required>
+      </label>
+
+      <label>Mobile No
+        <input name="mobile" required>
+      </label>
+
+      <div class="span2" style="display:grid;gap:8px">
+        <input type="hidden" name="invoiceType" id="ReservationInvoiceType" value="GST">
+        <label>Reservation Mode</label>
+        <div id="reservationModeBadge" class="status available" style="width:max-content">GST MODE</div>
+        <small id="reservationModeText" class="muted">Reservation will be saved in current GST mode. Press Ctrl+I to change GST/BILL mode.</small>
+      </div>
+
+      <label class="reservation-gst-field">GSTIN Optional
+        <input name="gstin">
+      </label>
+
+      <label class="reservation-gst-field">State
+        <input name="state">
+      </label>
+
+      <label>Address
+        <textarea name="address"></textarea>
+      </label>
+
+      <label>Booking Mode
+        <select name="bookingMode" id="ReservationMode"></select>
+      </label>
+
+      <label>Expected Check-in
+        <input type="datetime-local" name="expectedCheckIn" required onchange="updateReservationBalancePreview()">
+      </label>
+
+      <label>Expected Check-out
+        <input type="datetime-local" name="expectedCheckOut" required onchange="updateReservationBalancePreview()">
+      </label>
+
+      <label>Advance Amount
+        <input type="number" name="advanceAmount" value="0" oninput="updateReservationBalancePreview()">
+      </label>
+
+      <label>Payment Mode
+        <select name="paymentMode"><option>Cash</option><option>UPI</option><option>Card</option><option>Bank</option><option>Other</option></select>
+      </label>
+
+      <label>Reservation Price
+        <input type="number" name="reservationPrice" id="ReservationPrice" value="0" min="0" step="0.01" required oninput="updateReservationBalancePreview()">
+      </label>
+
+      <label>Balance
+        <input type="number" id="ReservationBalance" value="0" readonly>
+      </label>
+
+      <label>Notes
+        <textarea name="notes"></textarea>
+      </label>
+
+      <button type="submit" class="btn">Save Reservation</button>
+    </form>
+  </div>
+
+  <div class="panel">
+    <h3>Reservation Report</h3>
+    <input id="ReservationSearch" placeholder="Search guest, room, mobile" oninput="renderReservations()">
+
+    <div class="table-wrap">
+<table>
+  <thead>
+    <tr>
+      <th>Reservation No</th>
+      <th>Guest</th>
+      <th>Mobile</th>
+      <th>Mode</th>
+      <th>Room</th>
+      <th>Expected Check-in</th>
+      <th>Expected Check-out</th>
+      <th>Price</th>
+      <th>Total</th>
+      <th>Advance</th>
+      <th>Balance</th>
+      <th>Status</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody id="reservationRows"></tbody>
+</table>
+    </div>
+  </div>
+</section>
+</main>
+</div>
+<div id="detailModal" class="modal-backdrop hidden" onclick="closeDetailModal(event)">
+  <div class="detail-modal" onclick="event.stopPropagation()">
+    <div class="detail-modal-header">
+      <h3>Check-in Details</h3>
+      <button type="button" class="detail-close" onclick="closeDetailModal()">×</button>
+    </div>
+
+    <div id="detailModalBody" class="detail-modal-body"></div>
+
+    <div class="detail-modal-footer">
+      <button type="button" class="btn secondary" onclick="closeDetailModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script src="/js/vercel-api.js"></script>
+<script>
+function renderReservations() {
+  const tbody = document.getElementById('reservationRows');
+  if (!tbody) return;
+
+  const q = String((document.getElementById('ReservationSearch') || {}).value || '').toLowerCase();
+  const rows = Array.isArray(data.Reservations)
+    ? data.Reservations
+    : (Array.isArray(data.preBookings) ? data.preBookings : []);
+
+  const filtered = rows.filter(function(item) {
+    const status = String(item.status || item['STATUS'] || '').trim().toUpperCase();
+    if (status === 'CHECKED-IN' || status === 'CONVERTED') return false;
+    const text = [
+      item.bookingId, item.guestName, item.mobile, item.roomNo,
+      item.invoiceType, item.expectedCheckIn, item.expectedCheckOut, item.status
+    ].join(' ').toLowerCase();
+    return !q || text.indexOf(q) > -1;
+  });
+
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="13" class="muted">No reservations found</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(function(item) {
+    const bookingId = item.bookingId || item['BOOKING ID'] || '';
+    const guest = item.guestName || item['GUEST NAME'] || '';
+    const mobile = item.mobile || item['MOBILE NO'] || item['MOBILE No'] || '';
+    const room = item.roomNo || item['ROOM NO'] || item['ROOM No'] || '';
+    const invoiceType = String(item.invoiceType || item['INVOICE TYPE'] || 'GST').toUpperCase();
+    const checkIn = item.expectedCheckIn || item['EXPECTED CHECK IN'] || '';
+    const checkOut = item.expectedCheckOut || item['EXPECTED CHECK OUT'] || '';
+    const total = Number(item.totalAmount || item['TOTAL AMOUNT'] || 0);
+    const rawPrice = Number(item.roomPrice || item['ROOM PRICE'] || 0);
+    const price = !Number.isFinite(rawPrice) || rawPrice < 0 || Math.abs(rawPrice) > 10000000
+      ? total
+      : rawPrice;
+    const advance = Number(item.advanceAmount || item['ADVANCE AMOUNT'] || 0);
+    const rawBalance = item.balanceAmount ?? item['BALANCE AMOUNT'];
+    const balance = rawBalance === undefined || rawBalance === null || rawBalance === ''
+      ? total - advance
+      : Number(rawBalance);
+    const status = String(item.status || item['STATUS'] || 'RESERVED').toUpperCase();
+
+    let action = '';
+    if (status === 'RESERVED' || status === 'BOOKED') {
+      action =
+        '<button type="button" class="btn small" onclick="convertReservationToCheckIn(\'' + esc(bookingId) + '\')">Convert</button> ' +
+        '<button type="button" class="btn secondary small" onclick="editReservation(\'' + esc(bookingId) + '\')">Edit</button> ' +
+        '<button type="button" class="btn secondary small" onclick="printReservationSlip(\'' + esc(bookingId) + '\')">Print</button> ' +
+        '<button type="button" class="btn secondary small" onclick="sendReservationWhatsApp(\'' + esc(bookingId) + '\')">WhatsApp</button> ' +
+        '<button type="button" class="btn secondary small" onclick="markReservationNoShow(\'' + esc(bookingId) + '\')">No Show</button> ' +
+        '<button type="button" class="btn danger small" onclick="cancelReservation(\'' + esc(bookingId) + '\')">Cancel</button>';
+    } else {
+      action = '<button type="button" class="btn secondary small" onclick="printReservationSlip(\'' + esc(bookingId) + '\')">Print</button> ' +
+               '<button type="button" class="btn secondary small" onclick="sendReservationWhatsApp(\'' + esc(bookingId) + '\')">WhatsApp</button>';
+    }
+
+    return '<tr>' +
+      '<td><strong>' + esc(bookingId) + '</strong></td>' +
+      '<td>' + esc(guest) + '</td>' +
+      '<td>' + esc(mobile) + '</td>' +
+      '<td><span class="status">' + esc(invoiceType) + '</span></td>' +
+      '<td>' + esc(room) + '</td>' +
+      '<td>' + esc(checkIn) + '</td>' +
+      '<td>' + esc(checkOut) + '</td>' +
+      '<td>' + money(price) + '</td>' +
+      '<td>' + money(total) + '</td>' +
+      '<td>' + money(advance) + '</td>' +
+      '<td>' + money(balance) + '</td>' +
+      '<td><span class="status">' + esc(status) + '</span></td>' +
+      '<td>' + action + '</td>' +
+      '</tr>';
+  }).join('');
+}
+
+function findReservationById(bookingId) {
+  const rows = Array.isArray(data.Reservations)
+    ? data.Reservations
+    : (Array.isArray(data.preBookings) ? data.preBookings : []);
+  return rows.find(function(item) {
+    return String(item.bookingId || item['BOOKING ID'] || '') === String(bookingId);
+  });
+}
+
+function toDateTimeLocalValue(displayValue) {
+  const text = String(displayValue || '').trim();
+  const m = text.match(/^(\d{2})\/(\d{2})\/(\d{4})\s+(\d{1,2}):(\d{2})/);
+  if (m) return m[3] + '-' + m[2] + '-' + m[1] + 'T' + String(m[4]).padStart(2, '0') + ':' + m[5];
+  if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(text)) return text.substring(0, 16);
+  return '';
+}
+
+function editReservation(bookingId) {
+  const item = findReservationById(bookingId);
+  if (!item) return alert('Reservation not found.');
+  document.getElementById('reservationEditOverlay')?.remove();
+  const modes = (data.bookingModes || ['Walk In']).map(function(mode) {
+    return '<option value="' + esc(mode) + '"' + (String(mode) === String(item.bookingMode || '') ? ' selected' : '') + '>' + esc(mode) + '</option>';
+  }).join('');
+  const overlay = document.createElement('div');
+  overlay.id = 'reservationEditOverlay';
+  overlay.className = 'modal-backdrop';
+  overlay.innerHTML = '<div class="detail-modal" onclick="event.stopPropagation()" style="max-width:760px">' +
+    '<div class="detail-modal-header"><h3>Edit Reservation</h3><button type="button" class="detail-close" onclick="document.getElementById(\'reservationEditOverlay\').remove()">&times;</button></div>' +
+    '<form id="reservationEditForm" class="form" style="padding:18px">' +
+      '<input type="hidden" name="bookingId" value="' + esc(item.bookingId || '') + '">' +
+      '<input type="hidden" name="invoiceType" value="' + esc(item.invoiceType || 'GST') + '">' +
+      '<label>Guest Name<input name="guestName" required value="' + esc(item.guestName || '') + '"></label>' +
+      '<label>Mobile No<input name="mobile" required value="' + esc(item.mobile || '') + '"></label>' +
+      '<label>GSTIN<input name="gstin" value="' + esc(item.gstin || '') + '"></label>' +
+      '<label>State<input name="state" value="' + esc(item.state || '') + '"></label>' +
+      '<label class="span2">Address<textarea name="address">' + esc(item.address || '') + '</textarea></label>' +
+      '<label>Booking Mode<select name="bookingMode">' + modes + '</select></label>' +
+      '<label>Expected Check-in<input type="datetime-local" name="expectedCheckIn" required value="' + esc(toDateTimeLocalValue(item.expectedCheckIn)) + '"></label>' +
+      '<label>Expected Check-out<input type="datetime-local" name="expectedCheckOut" required value="' + esc(toDateTimeLocalValue(item.expectedCheckOut)) + '"></label>' +
+      '<label>Reservation Price<input type="number" name="reservationPrice" min="0" step="0.01" required value="' + Number(item.totalAmount || item.roomPrice || 0) + '"></label>' +
+      '<label>Advance Amount<input type="number" name="advanceAmount" min="0" step="0.01" value="' + Number(item.advanceAmount || 0) + '"></label>' +
+      '<label class="span2">Notes<textarea name="notes">' + esc(item.notes || '') + '</textarea></label>' +
+      '<div class="span2" style="display:flex;justify-content:flex-end;gap:8px"><button type="button" class="btn secondary" onclick="document.getElementById(\'reservationEditOverlay\').remove()">Cancel</button><button type="submit" class="btn">Save Changes</button></div>' +
+    '</form></div>';
+  document.body.appendChild(overlay);
+  document.getElementById('reservationEditForm').addEventListener('submit', saveReservationEditPopup);
+}
+
+function saveReservationEditPopup(event) {
+  event.preventDefault();
+  const form = event.target;
+  const button = form.querySelector('button[type="submit"]');
+  const payload = Object.fromEntries(new FormData(form).entries());
+  button.disabled = true;
+  showPageLoader('Saving reservation changes...');
+  google.script.run
+    .withSuccessHandler(function(result) {
+      hidePageLoader();
+      document.getElementById('reservationEditOverlay')?.remove();
+      if (result && result.data) { data = result.data; renderAll(); } else { loadData(); }
+      resetReservationFormMode();
+      showActionSuccess('Reservation Updated');
+    })
+    .withFailureHandler(function(error) {
+      hidePageLoader();
+      button.disabled = false;
+      alert('Reservation error: ' + (error.message || error));
+    })
+    .saveReservation(payload);
+}
+
+function resetReservationFormMode() {
+  const form = document.getElementById('ReservationForm');
+  if (!form) return;
+  form.reset();
+  form.bookingId.value = '';
+  const saveBtn = form.querySelector('button[type="submit"]');
+  if (saveBtn) saveBtn.textContent = 'Save Reservation';
+  syncReservationModeFromGlobal();
+  renderReservationSelects();
+  updateReservationBalancePreview();
+}
+
+function printReservationSlip(bookingId) {
+  const item = findReservationById(bookingId);
+  if (!item) return alert('Reservation not found.');
+
+  const html = '<html><head><title>Reservation Slip</title>' +
+    '<style>body{font-family:\'Nunito Sans\',Arial,sans-serif;padding:24px}h2{margin:0 0 6px}.box{border:1px solid #333;padding:16px;max-width:520px}.row{display:flex;border-bottom:1px solid #ddd;padding:7px 0}.row span{width:170px;font-weight:bold}</style>' +
+    '</head><body><div class="box">' +
+    '<h2>Hotel Fusion Suites</h2><h3>Reservation Slip</h3>' +
+    '<div class="row"><span>Reservation No</span>' + esc(item.bookingId || '') + '</div>' +
+    '<div class="row"><span>Guest</span>' + esc(item.guestName || '') + '</div>' +
+    '<div class="row"><span>Mobile</span>' + esc(item.mobile || '') + '</div>' +
+    '<div class="row"><span>Room</span>' + esc(item.roomNo || '') + '</div>' +
+    '<div class="row"><span>Mode</span>' + esc(item.invoiceType || '') + '</div>' +
+    '<div class="row"><span>Check-in</span>' + esc(item.expectedCheckIn || '') + '</div>' +
+    '<div class="row"><span>Check-out</span>' + esc(item.expectedCheckOut || '') + '</div>' +
+    '<div class="row"><span>Price</span>' + money(Number(item.roomPrice || 0)) + '</div>' +
+    '<div class="row"><span>Total</span>' + money(Number(item.totalAmount || 0)) + '</div>' +
+    '<div class="row"><span>Advance</span>' + money(Number(item.advanceAmount || 0)) + '</div>' +
+    '<div class="row"><span>Balance</span>' + money(Number(item.balanceAmount || 0)) + '</div>' +
+    '<div class="row"><span>Status</span>' + esc(item.status || '') + '</div>' +
+    '<p>Thank you for choosing us.</p></div><script>window.print()<\/script></body></html>';
+
+  const w = window.open('', '_blank');
+  w.document.write(html);
+  w.document.close();
+}
+
+function sendReservationWhatsApp(bookingId) {
+  const item = findReservationById(bookingId);
+  if (!item) return alert('Reservation not found.');
+
+  const phone = String(item.mobile || '').replace(/\D/g, '');
+  const mobile = phone.length === 10 ? '91' + phone : phone;
+  const msg = 'Reservation Confirmed%0A' +
+    'Reservation No: ' + encodeURIComponent(item.bookingId || '') + '%0A' +
+    'Guest: ' + encodeURIComponent(item.guestName || '') + '%0A' +
+    'Room: ' + encodeURIComponent(item.roomNo || '') + '%0A' +
+    'Check-in: ' + encodeURIComponent(item.expectedCheckIn || '') + '%0A' +
+    'Check-out: ' + encodeURIComponent(item.expectedCheckOut || '') + '%0A' +
+    'Advance: ' + encodeURIComponent(money(Number(item.advanceAmount || 0)));
+
+  window.open('https://wa.me/' + mobile + '?text=' + msg, '_blank');
+}
+
+function markReservationNoShow(bookingId) {
+  if (!confirm('Mark this reservation as No Show?')) return;
+  showPageLoader('Updating reservation...');
+  google.script.run
+    .withSuccessHandler(function(result) {
+      hidePageLoader();
+      if (result && result.data) { data = result.data; renderAll(); } else { loadData(); }
+      showToast('Reservation marked as No Show');
+    })
+    .withFailureHandler(function(error) { hidePageLoader(); alert('Error: ' + (error.message || error)); })
+    .markReservationNoShow(bookingId);
+}
+
+// Old function name kept for compatibility.
+function renderPreBookings() {
+  renderReservations();
+}
+
+function loadReservations() {
+  google.script.run
+    .withSuccessHandler(function(rows) {
+      data.Reservations = Array.isArray(rows) ? rows : [];
+      data.preBookings = data.Reservations;
+      renderReservations();
+    })
+    .withFailureHandler(function(error) {
+      const tbody = document.getElementById('reservationRows');
+      if (tbody) {
+        tbody.innerHTML = '<tr><td colspan="10">Error: ' + esc(error.message || error) + '</td></tr>';
+      }
+    })
+    .getReservations();
+}
+/* duplicate old loadReservations removed */
+
+function convertReservationToCheckIn(bookingId) {
+  if (!bookingId) {
+    alert('Reservation ID is missing.');
+    return;
+  }
+
+  const availableRooms = (data.rooms || []).filter(function(room) {
+    return String(room.status || '').trim().toUpperCase() === 'AVAILABLE';
+  });
+
+  if (!availableRooms.length) {
+    alert('No rooms are currently available.');
+    return;
+  }
+
+  const previous = document.getElementById('reservationRoomOverlay');
+  if (previous) previous.remove();
+
+  const overlay = document.createElement('div');
+  overlay.id = 'reservationRoomOverlay';
+  overlay.className = 'modal-backdrop';
+  overlay.innerHTML =
+    '<div class="detail-modal" onclick="event.stopPropagation()">' +
+      '<div class="detail-modal-header">' +
+        '<h3>Assign Room and Check In</h3>' +
+        '<button type="button" class="detail-close" id="closeRoomPicker">×</button>' +
+      '</div>' +
+      '<form id="reservationRoomForm">' +
+        '<div class="detail-modal-body">' +
+          '<label>Select Available Room' +
+            '<select id="conversionRoomNo" required>' +
+              '<option value="">Select room</option>' +
+              availableRooms.map(function(room) {
+                const roomNo = room.roomNo || room['ROOM NO'] || '';
+                const type = room.type || room['TYPE'] || '';
+                const floor = room.floor || room['FLOOR'] || '';
+                return '<option value="' + esc(roomNo) + '">' +
+                  esc([roomNo, type, floor].filter(Boolean).join(' - ')) +
+                  '</option>';
+              }).join('') +
+            '</select>' +
+          '</label>' +
+        '</div>' +
+        '<div class="detail-modal-footer">' +
+          '<button type="button" class="btn secondary" id="cancelRoomPicker">Cancel</button>' +
+          '<button type="submit" class="btn">Convert to Check-in</button>' +
+        '</div>' +
+      '</form>' +
+    '</div>';
+
+  function closePicker() { overlay.remove(); }
+  overlay.addEventListener('click', closePicker);
+  document.body.appendChild(overlay);
+  document.getElementById('closeRoomPicker').addEventListener('click', closePicker);
+  document.getElementById('cancelRoomPicker').addEventListener('click', closePicker);
+
+  document.getElementById('reservationRoomForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const roomNo = document.getElementById('conversionRoomNo').value;
+    if (!roomNo) return alert('Select an available room.');
+
+    closePicker();
+    showPageLoader('Converting reservation to check-in...');
+
+    google.script.run
+      .withSuccessHandler(function(result) {
+        hidePageLoader();
+        if (result && result.data) {
+          data = result.data;
+          data.Reservations = data.Reservations || [];
+          data.preBookings = data.Reservations;
+          renderAll();
+        } else {
+          loadData();
+        }
+        showActionSuccess('Check-in Successful');
+        setView('checkin');
+      })
+      .withFailureHandler(function(error) {
+        hidePageLoader();
+        alert('Conversion error: ' + (error.message || error));
+      })
+      .convertReservation(bookingId, roomNo);
+  });
+}
+function convertReservation(bookingId) {
+  if (!bookingId) return;
+
+  showPageLoader('Converting reservation...');
+
+  google.script.run
+    .withSuccessHandler(function(result) {
+      hidePageLoader();
+      if (reservationSaveBtn) { reservationSaveBtn.classList.remove('loading-btn'); reservationSaveBtn.textContent = 'Save Reservation'; }
+
+      if (result && result.data) {
+        data = result.data;
+        renderAll();
+      } else {
+        loadData();
+      }
+
+      showToast('Reservation converted to check-in');
+    })
+    .withFailureHandler(handleError)
+    .convertReservation(bookingId);
+}
+
+function cancelReservation(bookingId) {
+  if (!bookingId || !confirm('Cancel this reservation?')) return;
+
+  showPageLoader('Cancelling reservation...');
+
+  google.script.run
+    .withSuccessHandler(function(result) {
+      hidePageLoader();
+      if (reservationSaveBtn) { reservationSaveBtn.classList.remove('loading-btn'); reservationSaveBtn.textContent = 'Save Reservation'; }
+
+      if (result && result.data) {
+        data = result.data;
+        renderAll();
+      } else {
+        loadData();
+      }
+
+      showToast('Reservation cancelled');
+    })
+    .withFailureHandler(handleError)
+    .cancelReservation(bookingId);
+}
+
+function convertReservation(bookingId) {
+  if (!confirm('Convert this Reservation to check-in?')) return;
+
+  setLoading(true);
+
+  google.script.run
+    .withSuccessHandler(function(res) {
+      if (res && res.data) {
+        data = res.data;
+        renderAll();
+      } else {
+        loadData();
+      }
+
+      setLoading(false);
+      showToast('Converted to check-in');
+    })
+    .withFailureHandler(function(err) {
+      setLoading(false);
+      alert('ERROR: ' + (err.message || err));
+    })
+    .convertReservation(bookingId);
+}
+
+function cancelReservation(bookingId) {
+  if (!confirm('Cancel this Reservation?')) return;
+
+  setLoading(true);
+
+  google.script.run
+    .withSuccessHandler(function(res) {
+      if (res && res.data) {
+        data = res.data;
+        renderAll();
+      } else {
+        loadData();
+      }
+
+      setLoading(false);
+      showToast('Reservation cancelled');
+    })
+    .withFailureHandler(function(err) {
+      setLoading(false);
+      alert('ERROR: ' + (err.message || err));
+    })
+    .cancelReservation(bookingId);
+}
+function logoutApp() {
+  showLogoutConfirm();
+}
+
+function showLogoutConfirm() {
+  const old = document.getElementById('logoutOverlay');
+  if (old) old.remove();
+
+  const box = document.createElement('div');
+  box.innerHTML =
+    '<div id="logoutOverlay" style="position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px">' +
+      '<div style="background:white;border-radius:10px;max-width:420px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,.25);overflow:hidden">' +
+        '<div style="background:#0b3150;color:white;padding:16px 20px;font-weight:800;font-size:18px">Logout</div>' +
+        '<div style="padding:22px 20px;font-size:15px;color:#17202a">Are you sure you want to logout?</div>' +
+        '<div style="padding:14px 20px;background:#f5f7fb;display:flex;gap:10px;justify-content:flex-end">' +
+          '<button type="button" class="btn secondary" onclick="document.getElementById(\'logoutOverlay\').remove()">No</button>' +
+          '<button type="button" class="btn danger" id="logoutYesBtn">Yes</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+  document.body.appendChild(box.firstElementChild);
+
+  document.getElementById('logoutYesBtn').onclick = function() {
+    document.getElementById('logoutOverlay').remove();
+    sessionStorage.removeItem('hfsLoggedIn');
+    document.getElementById('loginScreen').classList.remove('hidden');
+    document.getElementById('app').classList.add('hidden');
+    google.script.run.logout();
+  };
+}
+let data = {rooms:[], stays:[], metrics:{}, company:{}, bookingModes:[]};
+
+function doLogin() {
+  const user = document.getElementById('loginUser').value.trim().toUpperCase();
+  const pass = document.getElementById('loginPass').value.trim();
+  const error = document.getElementById('loginError');
+  error.classList.add('hidden');
+  google.script.run.withSuccessHandler(function() {
+    sessionStorage.setItem('hfsLoggedIn', 'YES');
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    document.getElementById('loginPass').value = '';
+    loadData();
+  }).withFailureHandler(function(err) {
+    error.textContent = (err && err.message) || 'Invalid user ID or password';
+    error.classList.remove('hidden');
+  }).login({user:user,password:pass});
+}
+
+function checkLogin() {
+  if (sessionStorage.getItem('hfsLoggedIn') === 'YES') {
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    loadData();
+  } else {
+    document.getElementById('loginScreen').classList.remove('hidden');
+    document.getElementById('app').classList.add('hidden');
+  }
+}
+
+document.getElementById('loginButton').addEventListener('click', doLogin);
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && !document.getElementById('loginScreen').classList.contains('hidden')) {
+    doLogin();
+  }
+});
+document.querySelectorAll('.nav button').forEach(btn => {
+  btn.addEventListener('click', () => setView(btn.dataset.view));
+});
+
+document.getElementById('checkinForm').addEventListener('submit', e => {
+  e.preventDefault();
+ showPageLoader('Saving Check-in...');
+  const saveBtn = document.getElementById('saveCheckBtn');
+saveBtn.classList.add('loading-btn');
+saveBtn.textContent = 'Saving...';
+
+  const form = Object.fromEntries(new FormData(e.target).entries());
+
+  google.script.run
+    .withSuccessHandler(res => {
+      if (res && res.stay) {
+        data.stays = data.stays || [];
+        data.rooms = data.rooms || [];
+
+        data.stays.unshift(res.stay);
+
+        data.rooms = data.rooms.map(r => {
+          if (String(r.roomNo) === String(res.stay.roomNo)) {
+            return Object.assign({}, r, { status: 'CHECKED' });
+          }
+          return r;
+        });
+
+        e.target.adults.value = 1;
+        e.target.children.value = 0;
+        e.target.noOfDays.value = 1;
+        e.target.extraDays.value = 0;
+        e.target.earlyCheckInCharges.value = 0;
+        e.target.lateCheckoutCharges.value = 0;
+        e.target.roomServiceCharges.value = 0;
+        e.target.laundryCharges.value = 0;
+        e.target.foodCharges.value = 0;
+        if (e.target.waterCharges) e.target.waterCharges.value = 0;
+        if (e.target.extraPersonCharges) e.target.extraPersonCharges.value = 0;
+        e.target.advanceAmount.value = 0;
+
+        renderAll();
+        showSuccessAnimation();
+        e.target.reset();
+e.target.adults.value = 1;
+e.target.children.value = 0;
+e.target.noOfDays.value = 1;
+e.target.extraDays.value = 0;
+e.target.earlyCheckInCharges.value = 0;
+e.target.lateCheckoutCharges.value = 0;
+e.target.roomServiceCharges.value = 0;
+e.target.laundryCharges.value = 0;
+e.target.foodCharges.value = 0;
+e.target.advanceAmount.value = 0;
+stateInput.value = '';
+renderRoomSelect();
+        hidePageLoader();
+        saveBtn.classList.remove('loading-btn');
+saveBtn.textContent = 'Save Check In';
+        return;
+      }
+
+      hidePageLoader();
+      showToast('Check-in saved. Please refresh once.');
+    })
+.withFailureHandler(error => {
+  hidePageLoader();
+  handleError(error);
+})
+.saveCheckIn(form);
+});
+document.addEventListener('submit', function(event) {
+  if (event.target.id !== 'ReservationForm') return;
+
+  event.preventDefault();
+
+  const form = event.target;
+  syncReservationModeFromGlobal();
+  const payload = Object.fromEntries(new FormData(form).entries());
+
+  if (!payload.guestName || !payload.mobile ||
+      !payload.expectedCheckIn || !payload.expectedCheckOut) {
+    alert('Fill guest, mobile and expected dates.');
+    return;
+  }
+
+  const reservationSaveBtn = form.querySelector('button[type="submit"]');
+  if (reservationSaveBtn) { reservationSaveBtn.classList.add('loading-btn'); reservationSaveBtn.textContent = payload.bookingId ? 'Updating...' : 'Saving...'; }
+  showPageLoader(payload.bookingId ? 'Saving edit...' : 'Saving reservation...');
+
+  google.script.run
+    .withSuccessHandler(function(result) {
+      hidePageLoader();
+      if (reservationSaveBtn) { reservationSaveBtn.classList.remove('loading-btn'); reservationSaveBtn.textContent = 'Save Reservation'; }
+
+      if (result && result.data) {
+        data = result.data;
+        renderAll();
+      } else {
+        loadData();
+      }
+
+      resetReservationFormMode();
+      showActionSuccess(payload.bookingId ? 'Reservation Updated' : 'Reservation Successful');
+      setTimeout(loadData, 700);
+    })
+    .withFailureHandler(function(error) {
+      hidePageLoader();
+      if (reservationSaveBtn) { reservationSaveBtn.classList.remove('loading-btn'); reservationSaveBtn.textContent = payload.bookingId ? 'Update Reservation' : 'Save Reservation'; }
+      alert('Reservation error: ' + (error.message || error));
+    })
+    .saveReservation(payload);
+});
+function loadData() {
+  const updatedEl = document.getElementById('updated');
+  if (updatedEl) updatedEl.textContent = 'Loading data...';
+
+  google.script.run
+    .withSuccessHandler(function (response) {
+      try {
+        console.log('RAW APP DATA:', response);
+
+        if (!response) {
+          throw new Error('Server returned empty data');
+        }
+
+        data = typeof response === 'string' ? JSON.parse(response) : response;
+
+        data.rooms = Array.isArray(data.rooms) ? data.rooms : [];
+        data.stays = Array.isArray(data.stays) ? data.stays : [];
+        data.Reservations = Array.isArray(data.Reservations)
+          ? data.Reservations
+          : [];
+        data.preBookings = data.Reservations;
+        data.payments = Array.isArray(data.payments) ? data.payments : [];
+        data.charges = Array.isArray(data.charges) ? data.charges : [];
+        data.metrics = data.metrics || {};
+        data.company = data.company || {};
+        data.bookingModes = data.bookingModes || [];
+
+        renderAll();
+      } catch (error) {
+        const message = error?.message || String(error);
+        console.error('DISPLAY ERROR:', error);
+        if (updatedEl) updatedEl.textContent = 'Display error — ' + message;
+        alert('DISPLAY ERROR: ' + message);
+      }
+    })
+    .withFailureHandler(function (error) {
+      const message = error?.message || String(error);
+      console.error(error);
+      if (message.indexOf('sign in') !== -1) {
+        sessionStorage.removeItem('hfsLoggedIn');
+        document.getElementById('app').classList.add('hidden');
+        document.getElementById('loginScreen').classList.remove('hidden');
+        return;
+      }
+      if (updatedEl) updatedEl.textContent = 'Loading failed — click Refresh to retry';
+      alert('SERVER ERROR: ' + message);
+    })
+    .getAppDataJson();
+}
+
+function setView(view) {
+  document.querySelectorAll('.nav button').forEach(b =>
+    b.classList.toggle('active', b.dataset.view === view)
+  );
+
+  ['dashboard','checkin','status','invoice','gst','payments','history','Reservation'].forEach(id => {
+    document.getElementById(id).classList.toggle('hidden', view !== id);
+  });
+
+  document.getElementById('title').textContent = {
+    dashboard: 'Check-in Dashboard',
+    checkin: 'Check-in Report',
+    Reservation: 'Reservation',
+    status: 'Room Status Availability',
+    invoice: 'Tax Invoice',
+    gst: 'Monthly GST Report',
+    payments: 'Payment Received Report',
+    history: 'Vacated History'
+  }[view];
+  if (view === 'Reservation') {
+    renderReservations();
+  }
+}
+const RESERVATION_STATE_CODES = {
+  '01': 'Jammu and Kashmir',
+  '02': 'Himachal Pradesh',
+  '03': 'Punjab',
+  '04': 'Chandigarh',
+  '05': 'Uttarakhand',
+  '06': 'Haryana',
+  '07': 'Delhi',
+  '08': 'Rajasthan',
+  '09': 'Uttar Pradesh',
+  '10': 'Bihar',
+  '11': 'Sikkim',
+  '12': 'Arunachal Pradesh',
+  '13': 'Nagaland',
+  '14': 'Manipur',
+  '15': 'Mizoram',
+  '16': 'Tripura',
+  '17': 'Meghalaya',
+  '18': 'Assam',
+  '19': 'West Bengal',
+  '20': 'Jharkhand',
+  '21': 'Odisha',
+  '22': 'Chhattisgarh',
+  '23': 'Madhya Pradesh',
+  '24': 'Gujarat',
+  '26': 'Dadra and Nagar Haveli and Daman and Diu',
+  '27': 'Maharashtra',
+  '29': 'Karnataka',
+  '30': 'Goa',
+  '31': 'Lakshadweep',
+  '32': 'Kerala',
+  '33': 'Tamil Nadu',
+  '34': 'Puducherry',
+  '35': 'Andaman and Nicobar Islands',
+  '36': 'Telangana',
+  '37': 'Andhra Pradesh',
+  '38': 'Ladakh'
+};
+
+
+function setReservationInvoiceMode(mode) {
+  // Manual reservation mode selection removed.
+  // Reservation mode always follows the global Ctrl+I mode.
+  syncReservationModeFromGlobal();
+}
+
+function toggleReservationInvoiceMode() {
+  syncReservationModeFromGlobal();
+}
+
+function syncReservationModeFromGlobal() {
+  const form = document.getElementById('ReservationForm');
+  if (!form) return;
+
+  const mode = (typeof billMode !== 'undefined' && billMode) ? 'BILL' : 'GST';
+  const isBill = mode === 'BILL';
+  const hidden = form.querySelector('[name="invoiceType"]');
+  const text = document.getElementById('reservationModeText');
+  const badge = document.getElementById('reservationModeBadge');
+
+  if (hidden) hidden.value = mode;
+
+  if (badge) {
+    badge.textContent = mode + ' MODE';
+    badge.classList.toggle('checked', isBill);
+    badge.classList.toggle('available', !isBill);
+  }
+
+  if (text) {
+    text.textContent = isBill
+      ? 'Reservation will be saved in current BILL mode. GSTIN and State are not required. Press Ctrl+I to change mode.'
+      : 'Reservation will be saved in current GST mode. GSTIN and State will be saved. Press Ctrl+I to change mode.';
+  }
+
+  form.querySelectorAll('.reservation-gst-field').forEach(function(el) {
+    el.classList.toggle('hidden', isBill);
+  });
+
+  const gstin = form.querySelector('[name="gstin"]');
+  const state = form.querySelector('[name="state"]');
+
+  if (isBill) {
+    if (gstin) gstin.value = '';
+    if (state) state.value = '';
+  }
+}
+
+document.addEventListener('input', function(event) {
+  const form =
+    document.getElementById('ReservationForm') ||
+    document.getElementById('reservationForm');
+
+  if (!form || !form.contains(event.target)) return;
+  if (event.target.name !== 'gstin') return;
+
+  const gstin = String(event.target.value || '').trim().toUpperCase();
+  const stateInput = form.querySelector('[name="state"]');
+
+  if (stateInput) {
+    stateInput.value = gstin.length >= 2
+      ? RESERVATION_STATE_CODES[gstin.substring(0, 2)] || ''
+      : '';
+  }
+});
+function renderReservationSelects() {
+  const form =
+    document.getElementById('ReservationForm') ||
+    document.getElementById('reservationForm');
+
+  if (!form) return;
+
+  const modeSelect = form.querySelector('select[name="bookingMode"]');
+  const roomSelect = form.querySelector('select[name="roomNo"]');
+
+  if (modeSelect) {
+    const modes = data.bookingModes || ['Walk In', 'Agoda', 'Booking.com'];
+
+    modeSelect.innerHTML =
+      '<option value="">Select booking mode</option>' +
+      modes.map(function(item) {
+        const mode = typeof item === 'object'
+          ? item.name || item.mode || item.bookingMode
+          : item;
+
+        return '<option value="' + esc(mode) + '">' +
+          esc(mode) + '</option>';
+      }).join('');
+  }
+
+  if (roomSelect) {
+    roomSelect.innerHTML =
+      '<option value="">Select room</option>' +
+      (data.rooms || []).map(function(room) {
+        const number = room.roomNo || room['ROOM NO'];
+        const type = room.type || room['TYPE'] || '';
+
+        return '<option value="' + esc(number) + '">' +
+          esc(number + (type ? ' - ' + type : '')) +
+          '</option>';
+      }).join('');
+  }
+}
+function renderAll() {
+  hotelName.textContent = data.company.name || 'Hotel Fusion Suites';
+  hotelAddress.textContent = [data.company.address, data.company.mobile, data.company.email].filter(Boolean).join(' | ');
+  updated.textContent = 'Updated ' + (data.generatedAt || '');
+
+  const m = data.metrics || {};
+  mTotal.textContent = m.totalRooms || 0;
+  mAvailable.textContent = m.availableRooms || 0;
+  mOccupied.textContent = m.occupiedRooms || 0;
+  mToday.textContent = m.todayCheckins || 0;
+  mDue.textContent = m.expectedCheckouts || 0;
+  mRevenue.textContent = money(m.activeRevenue);
+  mTodayRevenue.textContent = money(m.todaysRevenue);
+  mOutstanding.textContent = money(m.outstandingBalance);
+  mMonthGst.textContent = money(m.monthGst);
+
+  renderBookingModes();
+  renderRoomSelect();
+  renderReservationSelects();
+  toggleReservationInvoiceMode();
+  // renderDashboardRooms();
+  renderReports();
+  renderFilters();
+  renderStatus();
+  renderInvoices();
+  renderGstReport();
+  renderPayments();
+  renderHistory();
+  renderReservations();
+  updateVacateNotifications();
+  renderDashboardReservationDetails();
+  
+}
+
+function openDashboardMetricDetails(kind) {
+  const stays = Array.isArray(data.stays) ? data.stays : [];
+  const todayKey = toIsoDate(new Date());
+  let title = 'Today Check-ins';
+  let rows = stays.filter(function(stay) {
+    return displayDateKey(stay.checkInTime) === todayKey;
+  });
+
+  if (kind === 'balance') {
+    title = 'Outstanding Balance Details';
+    rows = stays.filter(function(stay) {
+      return String(stay.status || '').trim().toUpperCase() === 'CHECKED' &&
+        Number(stay.balanceAmount || 0) > 0;
+    });
+  }
+
+  document.getElementById('dashboardMetricOverlay')?.remove();
+  const overlay = document.createElement('div');
+  overlay.id = 'dashboardMetricOverlay';
+  overlay.className = 'modal-backdrop';
+  overlay.innerHTML =
+    '<div class="detail-modal" style="max-width:820px" onclick="event.stopPropagation()">' +
+      '<div class="detail-modal-header"><h3>' + esc(title) + '</h3>' +
+        '<button type="button" class="detail-close" onclick="document.getElementById(\'dashboardMetricOverlay\').remove()">&times;</button></div>' +
+      '<div class="detail-modal-body" style="display:block">' +
+        '<div class="table-wrap"><table style="min-width:650px"><thead><tr>' +
+          '<th>Guest</th><th>Room</th><th>Mobile</th><th>Check-in</th><th>Balance</th><th>Action</th>' +
+        '</tr></thead><tbody>' +
+        (rows.length ? rows.map(function(stay) {
+          const index = stays.findIndex(function(item) {
+            return String(item.checkInId || '') === String(stay.checkInId || '');
+          });
+          return '<tr><td><strong>' + esc(stay.guestName || '') + '</strong></td>' +
+            '<td>' + esc(stay.roomNo || '') + '</td>' +
+            '<td>' + esc(stay.mobileNo || '') + '</td>' +
+            '<td>' + esc(stay.checkInTime || '') + '</td>' +
+            '<td>' + money(stay.balanceAmount || 0) + '</td>' +
+            '<td><button type="button" class="btn secondary small" onclick="document.getElementById(\'dashboardMetricOverlay\').remove();viewStay(' + index + ')">View</button></td></tr>';
+        }).join('') : '<tr><td colspan="6" class="muted">No matching guest records found</td></tr>') +
+        '</tbody></table></div>' +
+      '</div>' +
+      '<div class="detail-modal-footer"><button type="button" class="btn secondary" onclick="document.getElementById(\'dashboardMetricOverlay\').remove()">Close</button></div>' +
+    '</div>';
+  overlay.addEventListener('click', function() { overlay.remove(); });
+  document.body.appendChild(overlay);
+}
+
+function renderBookingModes() {
+  bookingModeSelect.innerHTML = (data.bookingModes || ['Walk In']).map(mode =>
+    '<option value="' + esc(mode) + '">' + esc(mode) + '</option>'
+  ).join('');
+}
+
+function renderRoomSelect() {
+  roomSelect.innerHTML = '<option value="">Select room</option>' +
+    data.rooms
+      .filter(r => String(r.status).toUpperCase() === 'AVAILABLE')
+      .map(r => '<option value="' + esc(r.roomNo) + '">' + esc(r.roomNo) + ' - ' + esc(r.floor) + ' - ' + esc(r.type) + ' - ' + money(r.price) + '</option>')
+      .join('');
+}
+
+function renderDashboardRooms() {
+  dashboardRows.innerHTML = data.rooms.map(roomCard).join('');
+}
+
+function renderStatus() {
+  const floor = floorFilter.value;
+  const type = typeFilter.value;
+  const stat = statusFilter.value.toUpperCase();
+
+  const rows = data.rooms.filter(r =>
+    (!floor || r.floor === floor) &&
+    (!type || r.type === type) &&
+    (!stat || String(r.status).toUpperCase() === stat)
+  );
+
+  statusRows.innerHTML = rows.map(roomCard).join('');
+}
+
+function roomCard(r) {
+  const statusText = String(r.status || 'AVAILABLE').trim().toUpperCase();
+  let statusClass = 'available';
+  let statusLabel = 'Available';
+
+  if (statusText === 'CHECKED' || statusText === 'BOOKED') {
+    statusClass = 'occupied';
+    statusLabel = 'Occupied';
+  } else if (statusText === 'VACATED BUT NOT CLEANED' || statusText === 'VACATED' || statusText === 'CLEANING') {
+    statusClass = 'cleaning';
+    statusLabel = 'Cleaning';
+  }
+
+  const roomType = r.type || 'Room';
+  const roomFloor = r.floor || 'Floor not set';
+
+  return '<div class="room-card ' + statusClass + '" title="Room ' + esc(r.roomNo) + ' - ' + statusLabel + '">' +
+    '<span class="room-card-number">' + esc(r.roomNo) + '</span>' +
+    '<span class="room-card-meta">' + esc(roomType) + ' &bull; ' + esc(roomFloor) + '</span>' +
+  '</div>';
+} 
+function currentMode() {
+  return billMode ? 'BILL' : 'GST';
+}
+
+function modeStays() {
+  const rows = data.stays || [];
+
+  if (billMode) {
+    return rows;
+  }
+
+  return rows.filter(s => {
+    const type = String(s.invoiceType || s['INVOICE TYPE'] || 'GST').toUpperCase();
+    return type !== 'BILL';
+  });
+}
+function renderReports() {
+  const q = (reportSearch.value || '').toLowerCase();
+  const status = reportStatus.value;
+  const dateValue = (document.getElementById('reportDate') || {}).value || '';
+  const monthValue = (document.getElementById('reportMonth') || {}).value || '';
+
+  let rows = modeStays();
+
+  rows = rows.filter(s => {
+    let rowStatus = String(s.status || '').trim().toUpperCase();
+    if (!rowStatus || rowStatus === 'AVAILABLE' || rowStatus === 'BOOKED') rowStatus = 'CHECKED';
+    if (rowStatus === 'VACATED') return false;
+
+    const text = [s.guestName, s.mobileNo, s.roomNo].join(' ').toLowerCase();
+    const matchText = !q || text.includes(q);
+    const matchStatus = !status || rowStatus === String(status).toUpperCase();
+    const d = parseDisplayDate(s.checkInTime);
+    const isoDate = d ? toIsoDate(d) : '';
+    const isoMonth = d ? toIsoMonth(d) : '';
+    const matchDate = !dateValue || isoDate === dateValue;
+    const matchMonth = !monthValue || isoMonth === monthValue;
+
+    return matchText && matchStatus && matchDate && matchMonth;
+  });
+
+  if (!q && !status && !dateValue && !monthValue) rows = rows.slice(0, 20);
+
+  reportRows.innerHTML = rows.map(s => {
+    const realIndex = (data.stays || []).indexOf(s);
+    let rowStatus = String(s.status || '').trim().toUpperCase();
+    if (!rowStatus || rowStatus === 'AVAILABLE' || rowStatus === 'BOOKED') rowStatus = 'CHECKED';
+
+    return '<tr>' +
+      '<td>' + esc(s.guestName || '') + '</td>' +
+      '<td>' + esc(s.mobileNo || '') + '</td>' +
+      '<td>' + esc(s.bookingMode || '') + '</td>' +
+      '<td>' + esc(s.roomNo || '') + '</td>' +
+      '<td>' + esc(s.type || '') + '</td>' +
+      '<td>' + money(s.price || 0) + '</td>' +
+      '<td>' + money(s.advanceAmount || 0) + '</td>' +
+      '<td>' + money(s.balanceAmount || 0) + '</td>' +
+      '<td>' + badge(rowStatus) + '</td>' +
+      '<td>' +
+        '<button class="btn secondary small" onclick="viewStay(' + realIndex + ')">View</button> ' +
+        '<button class="btn secondary small" onclick="printStay(' + realIndex + ')">Print/PDF</button> ' +
+        '<button class="btn secondary small" onclick="sendWhatsApp(' + realIndex + ')">WhatsApp</button> ' +
+        '<button class="btn secondary small" onclick="openPaymentPopup(' + realIndex + ')">Payment</button> ' +
+        '<button class="btn secondary small" onclick="editStay(' + realIndex + ')">Edit</button> ' +
+        (rowStatus === 'CHECKED' ? '<button class="btn danger small" onclick="vacate(' + realIndex + ')">Vacate</button>' : '') +
+        (rowStatus === 'VACATED BUT NOT CLEANED' ? '<button class="btn secondary small" onclick="markCleaned(' + realIndex + ')">🧹 Mark Cleaned</button>' : '') +
+      '</td>' +
+    '</tr>';
+  }).join('');
+}
+function displayDateKey(value) {
+  const text = String(value || '').trim();
+  let match = text.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+  if (match) return match[3] + '-' + match[2] + '-' + match[1];
+  match = text.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  return match ? match[1] + '-' + match[2] + '-' + match[3] : '';
+}
+
+function renderHistory() {
+  const q = (historySearch.value || '').toLowerCase();
+  const selectedDate = (document.getElementById('historyDate')?.value || '');
+  const selectedMonth = (document.getElementById('historyMonth')?.value || '');
+
+  const savedHistory = Array.isArray(data.history) ? data.history : [];
+  let rows = (savedHistory.length ? savedHistory : modeStays()).filter(s => {
+    const status = String(s.status || '').toUpperCase();
+    return status === 'VACATED' || status === 'VACATED BUT NOT CLEANED';
+  });
+
+  rows = rows.filter(s => {
+    const text = [s.guestName, s.mobileNo, s.roomNo].join(' ').toLowerCase();
+    const dateKey = displayDateKey(s.actualCheckOutTime || s.checkInTime);
+    return (!q || text.includes(q)) &&
+      (!selectedDate || dateKey === selectedDate) &&
+      (!selectedMonth || dateKey.indexOf(selectedMonth + '-') === 0);
+  });
+
+  if (!q && !selectedDate && !selectedMonth) rows = rows.slice(0, 20);
+
+  historyRows.innerHTML = rows.map(s => {
+    const realIndex = (data.stays || []).findIndex(function(stay) {
+      return String(stay.checkInId || '') === String(s.checkInId || '');
+    });
+
+    return '<tr>' +
+      '<td>' + esc(s.guestName || '') + '</td>' +
+      '<td>' + esc(s.mobileNo || '') + '</td>' +
+      '<td>' + esc(s.bookingMode || '') + '</td>' +
+      '<td>' + esc(s.roomNo || '') + '</td>' +
+      '<td>' + esc(s.type || '') + '</td>' +
+      '<td>' + esc(s.actualCheckOutTime || '-') + '</td>' +
+      '<td>' + money(s.total || 0) + '</td>' +
+      '<td>' + money(s.balanceAmount || 0) + '</td>' +
+      '<td>' + (String(s.status || '').toUpperCase() === 'VACATED'
+        ? '<span class="status available">CLEANED</span>'
+        : badge(s.status)) + '</td>' +
+      '<td>' +
+        '<button class="btn secondary small" onclick="viewStay(' + realIndex + ')">View</button> ' +
+        '<button class="btn secondary small" onclick="printStay(' + realIndex + ')">Print/PDF</button>' +
+      '</td>' +
+    '</tr>';
+  }).join('');
+}
+function generateTaxInvoice(checkInId) {
+  const lock = LockService.getDocumentLock();
+  lock.waitLock(20000);
+
+  try {
+    const sheet = getCheckinDataSheet_();
+    const rowInfo = findCheckinRowById_(sheet, checkInId);
+    if (!rowInfo) throw new Error('Check-in ID not found.');
+
+    const record = rowToObject_(rowInfo.headers, rowInfo.values);
+    const isBill = String(record['INVOICE TYPE'] || '').toUpperCase() === 'BILL';
+
+    if (isBill) {
+      if (!record['BILL NO']) {
+        record['BILL NO'] = getNextBillNo_();
+      }
+
+      record['INVOICE NO'] = record['BILL NO'];
+      record['GST INVOICE NO'] = '';
+      record['GSTIN'] = '';
+      record['CGST'] = 0;
+      record['SGST'] = 0;
+      record['IGST'] = 0;
+      record['GST %'] = '0%';
+      record['UPDATED AT'] = new Date();
+
+      writeObjectToRow_(sheet, rowInfo.row, rowInfo.headers, record);
+      saveTaxInvoiceReport_(record);
+
+      return {
+        ok: true,
+        message: 'Bill generated: ' + record['BILL NO'],
+        invoiceNo: record['BILL NO'],
+        data: getAppData()
+      };
+    }
+
+    if (!record['GST INVOICE NO']) {
+      record['GST INVOICE NO'] = getNextTaxInvoiceNo_();
+    }
+
+    record['INVOICE NO'] = record['GST INVOICE NO'];
+    record['UPDATED AT'] = new Date();
+
+    writeObjectToRow_(sheet, rowInfo.row, rowInfo.headers, record);
+    saveTaxInvoiceReport_(record);
+    rebuildGstMonthlyReport();
+
+    return {
+      ok: true,
+      message: 'Tax invoice generated: ' + record['GST INVOICE NO'],
+      invoiceNo: record['GST INVOICE NO'],
+      data: getAppData()
+    };
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function renderGstReport() {
+  const q = String((document.getElementById('gstReportSearch') || {}).value || '').toLowerCase();
+  const dateValue = (document.getElementById('gstReportDate') || {}).value || '';
+  const monthValue = (document.getElementById('gstReportMonth') || {}).value || '';
+  const title = document.getElementById('gstReportTitle');
+  if (title) title.textContent = billMode ? 'Sales Report' : 'Tax Invoice Report';
+
+  let rows = [];
+  if (billMode) {
+    rows = (data.stays || []).filter(s => {
+      const type = String(s.invoiceType || 'GST').toUpperCase();
+      return (type !== 'BILL' && !!s.gstInvoiceNo) || (type === 'BILL' && !!s.billNo);
+    });
+  } else {
+    rows = (data.stays || []).filter(s => String(s.invoiceType || 'GST').toUpperCase() !== 'BILL' && !!s.gstInvoiceNo);
+  }
+
+  rows = rows.filter(s => {
+    const type = String(s.invoiceType || 'GST').toUpperCase();
+    const invoiceNo = type === 'BILL' ? (s.billNo || '') : (s.gstInvoiceNo || s.invoiceNo || '');
+    const text = [s.guestName, s.roomNo, invoiceNo].join(' ').toLowerCase();
+    const d = parseDisplayDate(s.invoiceDate || s.checkInTime);
+    const matchText = !q || text.includes(q);
+    const matchDate = !dateValue || (d && toIsoDate(d) === dateValue);
+    const matchMonth = !monthValue || (d && toIsoMonth(d) === monthValue);
+    return matchText && matchDate && matchMonth;
+  });
+
+  if (!q && !dateValue && !monthValue) rows = rows.slice(0, 20);
+
+  gstReportRows.innerHTML = rows.map(s => {
+    const type = String(s.invoiceType || 'GST').toUpperCase();
+    const isBill = type === 'BILL';
+    const invoiceNo = isBill ? (s.billNo || '') : (s.gstInvoiceNo || s.invoiceNo || '');
+    const taxable = isBill ? Number(s.total || 0) : Number(s.subTotal || 0);
+    const cgst = isBill ? 0 : Number(s.cgst || 0);
+    const sgst = isBill ? 0 : Number(s.sgst || 0);
+    const igst = isBill ? 0 : Number(s.igst || 0);
+    const totalGst = cgst + sgst + igst;
+    const grandTotal = Number(s.total || 0);
+
+    return '<tr>' +
+      '<td>' + esc(s.invoiceDate || s.checkInTime || '') + '</td>' +
+      '<td>' + esc(invoiceNo) + '</td>' +
+      '<td>' + esc(s.guestName || '') + '</td>' +
+      '<td>' + esc(s.roomNo || '') + '</td>' +
+      '<td>' + money(taxable) + '</td>' +
+      '<td>' + money(cgst) + '</td>' +
+      '<td>' + money(sgst) + '</td>' +
+      '<td>' + money(igst) + '</td>' +
+      '<td>' + money(totalGst) + '</td>' +
+      '<td>' + money(grandTotal) + '</td>' +
+    '</tr>';
+  }).join('');
+}
+function renderFilters() {
+  fillFilter(floorFilter, unique(data.rooms.map(r => r.floor)), 'All Floors');
+  fillFilter(typeFilter, unique(data.rooms.map(r => r.type)), 'All Types');
+}
+
+function editCharges(index) {
+  const s = getStayByIndex(index);
+  if (!s) return showToast('Check-in not found');
+
+  const formHtml =
+    '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">' +
+    inputEdit('Guest Name', 'guestName', s.guestName) +
+    inputEdit('Mobile No', 'mobile', s.mobileNo) +
+    inputEdit('GSTIN Optional', 'gstin', s.gstin) +
+    inputEdit('State', 'state', s.state) +
+    inputEdit('Address', 'address', s.address) +
+    inputEdit('Booking Mode', 'bookingMode', s.bookingMode) +
+    selectRoomEdit(s.roomNo) +
+    inputEdit('Adults', 'adults', s.adults, 'number') +
+    inputEdit('Children', 'children', s.children, 'number') +
+    inputEdit('No. of Days', 'noOfDays', s.noOfDays, 'number') +
+    inputEdit('Extra Days', 'extraDays', s.extraDays, 'number') +
+    inputEdit('Early Check-in Charges', 'earlyCheckInCharges', s.earlyCheckInCharges, 'number') +
+    inputEdit('Late Checkout Charges', 'lateCheckoutCharges', s.lateCheckoutCharges, 'number') +
+    inputEdit('Room Service Charges', 'roomServiceCharges', s.roomServiceCharges, 'number') +
+    inputEdit('Laundry Charges', 'laundryCharges', s.laundryCharges, 'number') +
+    inputEdit('Food Charges', 'foodCharges', s.foodCharges, 'number') +
+    inputEdit('Water Charges', 'waterCharges', s.waterCharges, 'number') +
+    inputEdit('Extra Person Charges', 'extraPersonCharges', s.extraPersonCharges, 'number') +
+    inputEdit('Advance Amount', 'advanceAmount', s.advanceAmount, 'number') +
+    '</div>';
+
+  const box = document.createElement('div');
+  box.innerHTML =
+    '<div id="editOverlay" style="position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px">' +
+      '<div style="background:white;border-radius:10px;padding:20px;max-width:900px;width:100%;max-height:90vh;overflow:auto">' +
+        '<h3>Edit Check-in Details</h3>' +
+        '<form id="editForm">' +
+          '<input type="hidden" name="checkInId" value="' + esc(s.checkInId) + '">' +
+          formHtml +
+          '<div style="display:flex;gap:10px;margin-top:18px;justify-content:flex-end">' +
+            '<button type="button" class="btn secondary" onclick="document.getElementById(\'editOverlay\').remove()">Cancel</button>' +
+            '<button type="submit" class="btn">Save Changes</button>' +
+          '</div>' +
+        '</form>' +
+      '</div>' +
+    '</div>';
+
+  document.body.appendChild(box.firstElementChild);
+document.getElementById('editForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  setLoading(true);
+
+  google.script.run
+    .withSuccessHandler(res => {
+      document.getElementById('editOverlay').remove();
+
+      if (res && res.data) {
+        data = res.data;
+        renderAll();
+      } else {
+        loadData();
+      }
+
+      showToast((res && res.message) || 'Changes saved');
+      hidePageLoader();
+    })
+    .withFailureHandler(handleError)
+    .updateCheckIn(Object.fromEntries(new FormData(e.target).entries()));
+});
+}
+
+function inputEdit(label, name, value, type) {
+  return '<label>' + esc(label) +
+    '<input name="' + esc(name) + '" type="' + esc(type || 'text') + '" value="' + esc(value || 0) + '">' +
+    '</label>';
+}
+
+function selectRoomEdit(currentRoom) {
+  return '<label>Room No<select name="roomNo">' +
+    data.rooms.map(r =>
+      '<option value="' + esc(r.roomNo) + '"' +
+      (String(r.roomNo) === String(currentRoom) ? ' selected' : '') +
+      '>' + esc(r.roomNo) + ' - ' + esc(r.type) + ' - ' + money(r.price) + '</option>'
+    ).join('') +
+    '</select></label>';
+}
+function editStay(index) {
+  const s = getStayByIndex(index);
+
+  if (!s) {
+    alert('Check-in row not found.');
+    return;
+  }
+
+  const roomOptions = (data.rooms || []).map(r =>
+    '<option value="' + esc(r.roomNo) + '"' +
+      (String(r.roomNo) === String(s.roomNo) ? ' selected' : '') +
+    '>' + esc(r.roomNo) + ' - ' + esc(r.type) + ' - ' + money(r.price) + '</option>'
+  ).join('');
+
+  const old = document.getElementById('editOverlay');
+  if (old) old.remove();
+
+  const box = document.createElement('div');
+
+  box.innerHTML =
+    '<div id="editOverlay" class="modal-backdrop">' +
+      '<div class="detail-modal" style="max-width:900px">' +
+        '<div class="detail-modal-header">' +
+          '<h3>Edit Check-in Details</h3>' +
+          '<button type="button" class="detail-close" onclick="document.getElementById(\'editOverlay\').remove()">×</button>' +
+        '</div>' +
+
+        '<form id="editForm" class="detail-modal-body" style="grid-template-columns:repeat(2,1fr);display:grid">' +
+          '<input type="hidden" name="checkInId" value="' + esc(s.checkInId || '') + '">' +
+          '<input type="hidden" name="invoiceType" value="' + esc(s.invoiceType || 'GST') + '">' +
+
+          editInput('Guest Name', 'guestName', s.guestName) +
+          editInput('Mobile No', 'mobile', s.mobileNo) +
+          editInput('GSTIN Optional', 'gstin', s.gstin) +
+          editInput('State', 'state', s.state) +
+          editInput('Address', 'address', s.address) +
+
+          '<label>Booking Mode<input name="bookingMode" value="' + esc(s.bookingMode || 'Walk In') + '"></label>' +
+
+          '<label>Room No<select name="roomNo">' + roomOptions + '</select></label>' +
+
+          editInput('Room Price', 'manualPrice', s.price, 'number') +
+          editInput('Adults', 'adults', s.adults || 1, 'number') +
+          editInput('Children', 'children', s.children || 0, 'number') +
+          editInput('No. of Days', 'noOfDays', s.noOfDays || 1, 'number') +
+          editInput('Extra Days', 'extraDays', s.extraDays || 0, 'number') +
+          editInput('Early Check-in Charges', 'earlyCheckInCharges', s.earlyCheckInCharges || 0, 'number') +
+          editInput('Late Checkout Charges', 'lateCheckoutCharges', s.lateCheckoutCharges || 0, 'number') +
+          editInput('Room Service Charges', 'roomServiceCharges', s.roomServiceCharges || 0, 'number') +
+          editInput('Laundry Charges', 'laundryCharges', s.laundryCharges || 0, 'number') +
+          editInput('Food Charges', 'foodCharges', s.foodCharges || 0, 'number') +
+          editInput('Water Charges', 'waterCharges', s.waterCharges || 0, 'number') +
+          editInput('Extra Person Charges', 'extraPersonCharges', s.extraPersonCharges || 0, 'number') +
+          editInput('Advance Amount', 'advanceAmount', s.advanceAmount || 0, 'number') +
+
+          '<div style="grid-column:1 / -1;text-align:right;margin-top:10px">' +
+            '<button type="button" class="btn secondary" onclick="document.getElementById(\'editOverlay\').remove()">Cancel</button> ' +
+            '<button type="submit" class="btn">Save Changes</button>' +
+          '</div>' +
+        '</form>' +
+      '</div>' +
+    '</div>';
+
+  document.body.appendChild(box.firstElementChild);
+
+  document.getElementById('editForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    showPageLoader('Saving Changes...');
+
+    google.script.run
+      .withSuccessHandler(res => {
+        if (res && res.data) {
+          data = res.data;
+          renderAll();
+        } else {
+          loadData();
+        }
+
+        hidePageLoader();
+        document.getElementById('editOverlay')?.remove();
+        showActionSuccess('Changes Saved Successfully');
+      })
+      .withFailureHandler(error => {
+        hidePageLoader();
+        handleError(error);
+      })
+      .updateCheckIn(Object.fromEntries(new FormData(e.target).entries()));
+  });
+}
+
+function editInput(label, name, value, type) {
+  return '<label>' + esc(label) +
+    '<input name="' + esc(name) + '" type="' + esc(type || 'text') + '" value="' + esc(value || '') + '">' +
+  '</label>';
+}
+function vacate(index) {
+  const s = getStayByIndex(index);
+
+  if (!s) {
+    alert('Check-in row not found.');
+    return;
+  }
+
+  const checkInId = s.checkInId || s['CHECK IN ID'] || s['Check In ID'];
+
+  if (!checkInId) {
+    alert('Check-in ID missing for this row.');
+    return;
+  }
+
+  showConfirmModal(
+    'Vacate Room',
+    'Are you sure you want to vacate room ' + s.roomNo + '?',
+    function() {
+      showPageLoader('Vacating Room...');
+
+      google.script.run
+        .withSuccessHandler(res => {
+          if (res && res.data) {
+            data = res.data;
+            renderAll();
+          } else {
+            loadData();
+          }
+
+          hidePageLoader();
+          showActionSuccess('Room Vacated Successfully');
+        })
+        .withFailureHandler(error => {
+          hidePageLoader();
+          showMessageModal('Checkout Blocked', error.message || String(error));
+        })
+        .vacateRoom(checkInId);
+    }
+  );
+}
+
+function markCleaned(index) {
+  const s = getStayByIndex(index);
+
+  if (!s) {
+    alert('Check-in row not found.');
+    return;
+  }
+
+  const checkInId = s.checkInId || s['CHECK IN ID'] || s['Check In ID'];
+
+  if (!checkInId) {
+    alert('Check-in ID missing for this row.');
+    return;
+  }
+
+  showPageLoader('🧹 Cleaning Room...');
+
+  google.script.run
+    .withSuccessHandler(res => {
+      if (res && res.data) {
+        data = res.data;
+        renderAll();
+      } else {
+        loadData();
+      }
+
+      hidePageLoader();
+      showActionSuccess('Room Cleaned Successfully');
+    })
+    .withFailureHandler(error => {
+      hidePageLoader();
+      handleError(error);
+    })
+    .markRoomCleaned(checkInId);
+}
+
+function generateTaxInvoiceNow(index) {
+  const s = getStayByIndex(index);
+
+  if (!s) {
+    alert('Check-in row not found.');
+    return;
+  }
+
+  const checkInId = s.checkInId || s['CHECK IN ID'] || s['Check In ID'];
+
+  if (!checkInId) {
+    alert('Check-in ID missing for this row.');
+    return;
+  }
+
+  showPageLoader('Generating Tax Invoice...');
+
+  google.script.run
+    .withSuccessHandler(res => {
+      if (res && res.data) {
+        data = res.data;
+        renderAll();
+      } else {
+        loadData();
+      }
+
+      hidePageLoader();
+      showActionSuccess('Tax Invoice Generated');
+    })
+    .withFailureHandler(error => {
+      hidePageLoader();
+      handleError(error);
+    })
+    .generateTaxInvoice(checkInId);
+}
+function renderInvoices() {
+  const q = (document.getElementById('invoiceSearch')?.value || '').toLowerCase();
+
+  const rows = modeStays().filter(s => !s.invoiceRowHidden).filter(s => {
+    const text = [
+      s.guestName,
+      s.mobileNo,
+      s.roomNo,
+      s.invoiceNo,
+      s.gstInvoiceNo,
+      s.billNo
+    ].join(' ').toLowerCase();
+
+    return !q || text.includes(q);
+  });
+
+  invoiceRows.innerHTML = rows.map(s => {
+    const realIndex = (data.stays || []).indexOf(s);
+    const type = String(s.invoiceType || s['INVOICE TYPE'] || 'GST').toUpperCase();
+    const isBill = type === 'BILL';
+
+    const invoiceNo = isBill
+      ? (s.billNo || s.invoiceNo || 'Not generated')
+      : (s.gstInvoiceNo || s.invoiceNo || 'Not generated');
+
+    const hasInvoice = isBill ? !!s.billNo : !!s.gstInvoiceNo;
+    const generateText = isBill ? 'Generate Bill' : 'Generate Tax Invoice';
+    const generatedText = isBill ? 'Bill Generated' : 'Tax Invoice Generated';
+
+    let action = '';
+
+    if (hasInvoice) {
+      action += '<span style="color:#087f3f;font-weight:400">' + generatedText + '</span> ';
+      action += '<button class="btn danger small" title="Remove from invoice page" onclick="hideInvoiceReportRow(\'' + js(s.checkInId || '') + '\')">&times;</button> ';
+    } else {
+      action += '<button class="btn secondary small" onclick="generateTaxInvoiceNow(' + realIndex + ')">' + generateText + '</button> ';
+    }
+
+    action += '<button class="btn secondary small" onclick="printStay(' + realIndex + ')">Print/PDF</button> ';
+    action += '<button class="btn secondary small" onclick="sendWhatsApp(' + realIndex + ')">WhatsApp</button>';
+
+    return '<tr>' +
+      '<td>' + esc(s.guestName || '') + '</td>' +
+      '<td>' + esc(s.mobileNo || '') + '</td>' +
+      '<td>' + esc(s.roomNo || '') + '</td>' +
+      '<td>' + esc(invoiceNo) + '</td>' +
+      '<td>' + money(s.total || 0) + '</td>' +
+      '<td>' + money(s.advanceAmount || 0) + '</td>' +
+      '<td>' + money(s.balanceAmount || 0) + '</td>' +
+      '<td>' + badge(s.status) + '</td>' +
+      '<td>' + action + '</td>' +
+    '</tr>';
+  }).join('');
+}
+
+function hideInvoiceReportRow(checkInId) {
+  if (!checkInId) return alert('Check-in ID is missing.');
+  if (!confirm('Remove this generated invoice row from this page?')) return;
+  showPageLoader('Removing invoice row...');
+  google.script.run
+    .withSuccessHandler(function(result) {
+      hidePageLoader();
+      if (result && result.data) { data = result.data; renderAll(); } else { loadData(); }
+      showActionSuccess('Invoice Row Removed');
+    })
+    .withFailureHandler(function(error) {
+      hidePageLoader();
+      handleError(error);
+    })
+    .hideGeneratedInvoiceRow(checkInId);
+}
+function getStayByIndex(index) {
+  return (data.stays || [])[Number(index)];
+}
+function viewStay(index) {
+  const s = getStayByIndex(index);
+  if (!s) return showToast('Check-in not found');
+
+  const gst = Number(s.cgst || 0) + Number(s.sgst || 0) + Number(s.igst || 0);
+
+  detailModalBody.innerHTML =
+    detailRow('Check-in ID', s.checkInId) +
+    detailRow('Guest', s.guestName) +
+    detailRow('Mobile', s.mobileNo) +
+    detailRow('GSTIN', s.gstin || '-') +
+    detailRow('State', s.state || '-') +
+    detailRow('Address', s.address || '-') +
+    detailRow('Booking Mode', s.bookingMode || '-') +
+    detailRow('Room', s.roomNo) +
+    detailRow('Floor', s.floor || '-') +
+    detailRow('Type', s.type) +
+    detailRow('Price / Day', money(s.price)) +
+    detailRow('No. of Days', s.noOfDays || 0) +
+    detailRow('Extra Days', s.extraDays || 0) +
+    detailRow('Extra Day Amount', money(s.extraDayAmount || 0)) +
+    detailRow('Room Amount', money(s.amount || 0)) +
+    detailRow('Early Check-in Charges', money(s.earlyCheckInCharges || 0)) +
+    detailRow('Late Checkout Charges', money(s.lateCheckoutCharges || 0)) +
+    detailRow('Room Service Charges', money(s.roomServiceCharges || 0)) +
+    detailRow('Laundry Charges', money(s.laundryCharges || 0)) +
+    detailRow('Food Charges', money(s.foodCharges || 0)) +
+    detailRow('Subtotal', money(s.subTotal || 0)) +
+    detailRow('GST %', s.gstRate || s.gstPercent || '-') +
+    detailRow('CGST', money(s.cgst || 0)) +
+    detailRow('SGST', money(s.sgst || 0)) +
+    detailRow('IGST', money(s.igst || 0)) +
+    detailRow('Total GST', money(gst)) +
+    detailRow('Grand Total', money(s.total || 0)) +
+    detailRow('Water Charges', money(s.waterCharges || 0)) +
+    detailRow('Extra Person Charges', money(s.extraPersonCharges || 0)) +
+    detailRow('Payment Received', money(s.advanceAmount || 0)) +
+    detailRow('Balance Amount', money(s.balanceAmount || 0)) +
+    detailRow('Check-in Time', s.checkInTime || '-') +
+    detailRow('Planned Checkout', s.plannedCheckOutTime || '-') +
+    detailRow('Vacate Date Time', s.vacateDateTime || '-') +
+    detailRow('Invoice No', s.gstInvoiceNo || 'Not generated') +
+    detailRow('Status', s.status || '-');
+
+  document.getElementById('detailModal').classList.remove('hidden');
+}
+
+function detailRow(label, value) {
+  return '<div class="detail-row">' +
+    '<span>' + esc(label) + '</span>' +
+    '<strong>' + esc(value || '') + '</strong>' +
+  '</div>';
+}
+
+function closeDetailModal(event) {
+  const modal = document.getElementById('detailModal');
+  if (!modal) return;
+
+  if (event && event.target && event.target.id !== 'detailModal') return;
+
+  modal.classList.add('hidden');
+}
+function printStay(index) {
+  const s = getStayByIndex(index);
+  const isBill = String(s.invoiceType || '').toUpperCase() === 'BILL';
+  const invoiceTitle = isBill ? 'BILL' : 'Tax Invoice';
+  if (!s) return showToast('Check-in not found');
+
+  const gst = Number(s.cgst || 0) + Number(s.sgst || 0) + Number(s.igst || 0);
+  const invoiceNo = s.gstInvoiceNo || 'NOT GENERATED';
+  const otherCharges = Math.max(0, Number(s.subTotal || 0) - Number(s.amount || 0));
+  const win = window.open('', '_blank');
+
+  win.document.write(
+    '<html><head><title>Tax Invoice</title>' +
+    '<style>' +
+    'body{font-family:\'Nunito Sans\',Arial,sans-serif;padding:18px;color:#111}' +
+    'h2{text-align:center;margin:0 0 16px}' +
+    'table{width:100%;border-collapse:collapse}' +
+    'td,th{border:1px solid #444;padding:6px;font-size:12px;vertical-align:top}' +
+    '.right{text-align:right}.center{text-align:center}.bold{font-weight:bold}' +
+    '.big{font-size:18px;font-weight:bold}.sign{height:70px;text-align:right;vertical-align:bottom}' +
+    '</style></head><body>' +
+
+    '<h2>Tax Invoice</h2>' +
+
+    '<table>' +
+    '<tr><td colspan="3" rowspan="4"><div class="big">' + esc(data.company.name || 'Hotel Fusion Suites') + '</div>' +
+    esc(data.company.address || '') + '<br>Mobile: ' + esc(data.company.mobile || '') +
+    '<br>E-Mail: ' + esc(data.company.email || '') +
+    '<br>GSTIN: ' + esc(data.company.gstin || '') + '</td>' +
+    '<td>Invoice No.<br><b>' + esc(invoiceNo) + '</b></td>' +
+    '<td>Dated<br><b>' + esc(new Date().toLocaleDateString('en-IN')) + '</b></td></tr>' +
+
+    '<tr><td>Mode/Terms of Payment</td><td>' + esc(s.bookingMode || '') + '</td></tr>' +
+    '<tr><td>Supplier Ref.</td><td>' + esc(s.checkInId || '') + '</td></tr>' +
+    '<tr><td>Other Reference(s)</td><td></td></tr>' +
+
+    '<tr><td colspan="3" rowspan="4"><b>Buyer</b><br><b>' + esc(s.guestName || '') + '</b><br>' +
+    esc(s.address || '') + '<br>Mobile: ' + esc(s.mobileNo || '') +
+    '<br>GSTIN: ' + esc(s.gstin || '') +
+    '<br>State: ' + esc(s.state || '') + '</td>' +
+    '<td>Room No.</td><td>' + esc(s.roomNo || '') + '</td></tr>' +
+
+    '<tr><td>Check-in</td><td>' + esc(s.checkInTime || '') + '</td></tr>' +
+    '<tr><td>Planned Checkout</td><td>' + esc(s.plannedCheckOutTime || '') + '</td></tr>' +
+    '<tr><td>Status</td><td>' + esc(s.status || '') + '</td></tr>' +
+    '</table>' +
+
+    '<table style="margin-top:12px">' +
+    '<tr><th>Sl No.</th><th>Description of Services</th><th>HSN/SAC</th><th>Qty</th><th>Rate</th><th>Amount</th></tr>' +
+    '<tr><td>1</td><td>Room Accommodation - ' + esc(s.type || '') + '</td><td>9963</td><td>' + esc(s.noOfDays || 0) + '</td><td class="right">' + money(s.price) + '</td><td class="right">' + money(s.amount) + '</td></tr>' +
+    '<tr><td>2</td><td>Water / Food / Extra / Service / Laundry Charges</td><td>9963</td><td></td><td></td><td class="right">' + money(otherCharges) + '</td></tr>' +
+    '<tr><td></td><td class="right bold">CGST</td><td></td><td></td><td></td><td class="right">' + money(s.cgst) + '</td></tr>' +
+    '<tr><td></td><td class="right bold">SGST</td><td></td><td></td><td></td><td class="right">' + money(s.sgst) + '</td></tr>' +
+    '<tr><td></td><td class="right bold">IGST</td><td></td><td></td><td></td><td class="right">' + money(s.igst) + '</td></tr>' +
+    '<tr><td colspan="5" class="right bold">Total</td><td class="right big">' + money(s.total) + '</td></tr>' +
+    '</table>' +
+
+    '<table style="margin-top:12px">' +
+    '<tr><td>Advance Amount</td><td class="right">' + money(s.advanceAmount) + '</td></tr>' +
+    '<tr><td>Balance Amount</td><td class="right bold">' + money(s.balanceAmount) + '</td></tr>' +
+    '</table>' +
+
+    '<table style="margin-top:12px">' +
+    '<tr><td class="bold">Taxable Value</td><td class="bold">CGST</td><td class="bold">SGST</td><td class="bold">IGST</td><td class="bold">Total GST</td></tr>' +
+    '<tr><td>' + money(s.subTotal) + '</td><td>' + money(s.cgst) + '</td><td>' + money(s.sgst) + '</td><td>' + money(s.igst) + '</td><td>' + money(gst) + '</td></tr>' +
+    '</table>' +
+
+    '<table style="margin-top:30px">' +
+    '<tr><td>Declaration<br>We declare that this invoice shows the actual service value and all particulars are true and correct.</td>' +
+    '<td class="sign bold">for ' + esc(data.company.name || 'Hotel Fusion Suites') + '<br><br>Authorised Signatory</td></tr>' +
+    '</table>' +
+
+    '<p class="center">This is a Computer Generated Invoice</p>' +
+    '</body></html>'
+  );
+
+  win.document.close();
+  setTimeout(function() {
+    win.print();
+  }, 500);
+}
+
+function sendWhatsApp(index) {
+  const s = getStayByIndex(index);
+  if (!s) return showToast('Check-in not found');
+
+  let phone = String(s.mobileNo || '').replace(/\D/g, '');
+  if (phone.length === 10) phone = '91' + phone;
+
+  const msg =
+    'Welcome to Hotel Fusion Suites\n\n' +
+    'Dear ' + (s.guestName || 'Guest') + ',\n\n' +
+    'Thank you for choosing to stay with us.\n\n' +
+    'Your check-in has been successfully completed.\n\n' +
+    'Room: ' + (s.roomNo || '') + '\n' +
+    'Check-in: ' + (s.checkInTime || '') + '\n' +
+    'Check-out: ' + (s.plannedCheckOutTime || '') + '\n\n' +
+    'We wish you a pleasant and comfortable stay.\n\n' +
+    'Reception: +91 8197015011';
+
+  google.script.run.markInvoiceWhatsAppSent(s.checkInId);
+  window.open('https://wa.me/' + phone + '?text=' + encodeURIComponent(msg), '_blank');
+}
+document.getElementById('roomSelect').addEventListener('change', function() {
+  const roomNo = this.value;
+  const room = (data.rooms || []).find(r => String(r.roomNo) === String(roomNo));
+
+  if (room) {
+    document.getElementById('manualPrice').value = Number(room.price || 0);
+  } else {
+    document.getElementById('manualPrice').value = '';
+  }
+});
+function fillStateFromGstin() {
+  const gstin = gstinInput.value.trim();
+  const code = gstin.substring(0, 2);
+  const stateCodes = {
+    '01':'Jammu & Kashmir','02':'Himachal Pradesh','03':'Punjab','04':'Chandigarh','05':'Uttarakhand','06':'Haryana','07':'Delhi','08':'Rajasthan','09':'Uttar Pradesh','10':'Bihar','11':'Sikkim','12':'Arunachal Pradesh','13':'Nagaland','14':'Manipur','15':'Mizoram','16':'Tripura','17':'Meghalaya','18':'Assam','19':'West Bengal','20':'Jharkhand','21':'Odisha','22':'Chhattisgarh','23':'Madhya Pradesh','24':'Gujarat','25':'Daman & Diu','26':'Dadra & Nagar Haveli','27':'Maharashtra','28':'Andhra Pradesh','29':'Karnataka','30':'Goa','31':'Lakshadweep','32':'Kerala','33':'Tamil Nadu','34':'Puducherry','35':'Andaman & Nicobar Islands','36':'Telangana','37':'Andhra Pradesh','38':'Ladakh','97':'Other Territory'
+  };
+
+  if (stateCodes[code]) stateInput.value = stateCodes[code];
+  else if (gstin.length < 2) stateInput.value = '';
+}
+
+function fillFilter(el, values, label) {
+  const current = el.value;
+  el.innerHTML = '<option value="">' + label + '</option>' +
+    values.map(v => '<option value="' + esc(v) + '">' + esc(v) + '</option>').join('');
+  el.value = values.includes(current) ? current : '';
+}
+
+function unique(values) {
+  return [...new Set(values.filter(Boolean))].sort();
+}
+
+function badge(status) {
+  let value = String(status || 'AVAILABLE').trim().toUpperCase();
+
+  if (value === 'BOOKED') value = 'CHECKED';
+
+  let cls = 'available';
+
+  if (value === 'CHECKED') cls = 'checked';
+  if (value === 'AVAILABLE') cls = 'available';
+  if (value === 'VACATED') cls = 'vacated';
+  if (value === 'VACATED BUT NOT CLEANED') cls = 'uncleaned';
+
+  return '<span class="status ' + cls + '">' + esc(value) + '</span>';
+}
+
+function money(value) {
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    maximumFractionDigits: 2
+  }).format(Number(value || 0));
+}
+
+function esc(value) {
+  return String(value ?? '').replace(/[&<>"']/g, c => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;'
+  }[c]));
+}
+
+function js(value) {
+  return String(value ?? '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+}
+function showSuccessAnimation() {
+  const el = document.getElementById('successOverlay');
+  if (!el) return;
+
+  el.classList.remove('hidden');
+
+  setTimeout(function() {
+    el.classList.add('hidden');
+  }, 2200);
+}
+function showActionSuccess(message) {
+  const el = document.getElementById('successOverlay');
+  if (!el) return;
+
+  const title = el.querySelector('h2');
+  const text = el.querySelector('p');
+
+  if (title) title.textContent = message || 'Successful';
+  if (text) text.textContent = 'Details updated successfully.';
+
+  el.classList.remove('hidden');
+
+  setTimeout(function() {
+    el.classList.add('hidden');
+
+    if (title) title.textContent = 'Check-in Successful';
+    if (text) text.textContent = 'Guest details saved and room status updated.';
+  }, 1800);
+}
+function showToast(message) {
+  const el = document.getElementById('toast');
+  if (!el) return;
+  el.textContent = message || '';
+  el.classList.remove('hidden');
+  setTimeout(function() {
+    el.classList.add('hidden');
+  }, 3000);
+}
+function showConfirmModal(title, message, onConfirm) {
+  const old = document.getElementById('confirmOverlay');
+  if (old) old.remove();
+
+  const box = document.createElement('div');
+  box.innerHTML =
+    '<div id="confirmOverlay" style="position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px">' +
+      '<div style="background:white;border-radius:10px;max-width:420px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,.25);overflow:hidden">' +
+        '<div style="background:#0b3150;color:white;padding:16px 20px;font-weight:800;font-size:18px">' + esc(title) + '</div>' +
+        '<div style="padding:22px 20px;font-size:15px;color:#17202a">' + esc(message) + '</div>' +
+        '<div style="padding:14px 20px;background:#f5f7fb;display:flex;gap:10px;justify-content:flex-end">' +
+          '<button type="button" class="btn secondary" onclick="document.getElementById(\'confirmOverlay\').remove()">Cancel</button>' +
+          '<button type="button" class="btn danger" id="confirmOkBtn">Vacate</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+  document.body.appendChild(box.firstElementChild);
+
+  document.getElementById('confirmOkBtn').onclick = function() {
+    document.getElementById('confirmOverlay').remove();
+    onConfirm();
+  };
+}
+
+function showMessageModal(title, message) {
+  document.getElementById('messageOverlay')?.remove();
+  const box = document.createElement('div');
+  box.innerHTML =
+    '<div id="messageOverlay" class="modal-backdrop">' +
+      '<div class="detail-modal" style="max-width:440px" onclick="event.stopPropagation()">' +
+        '<div class="detail-modal-header"><h3>' + esc(title) + '</h3>' +
+          '<button type="button" class="detail-close" onclick="document.getElementById(\'messageOverlay\').remove()">&times;</button></div>' +
+        '<div class="detail-modal-body"><p style="margin:0;line-height:1.6">' + esc(message) + '</p></div>' +
+        '<div class="detail-modal-footer"><button type="button" class="btn" onclick="document.getElementById(\'messageOverlay\').remove()">OK</button></div>' +
+      '</div>' +
+    '</div>';
+  document.body.appendChild(box.firstElementChild);
+  document.getElementById('messageOverlay').addEventListener('click', function(event) {
+    if (event.target.id === 'messageOverlay') event.currentTarget.remove();
+  });
+}
+
+function parseDisplayDate(value) {
+  if (!value) return null;
+  if (value instanceof Date && !isNaN(value)) return value;
+  const text = String(value).trim();
+  let m = text.match(/^(\d{2})\/(\d{2})\/(\d{4})\s+(\d{1,2}):(\d{2})/);
+  if (m) return new Date(Number(m[3]), Number(m[2])-1, Number(m[1]), Number(m[4]), Number(m[5]));
+  const d = new Date(text);
+  return isNaN(d.getTime()) ? null : d;
+}
+function toIsoDate(d) {
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function toIsoMonth(d) {
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+}
+
+function renderPayments() {
+  const q = String((document.getElementById('paymentSearch') || {}).value || '').toLowerCase();
+  const dateValue = (document.getElementById('paymentDate') || {}).value || '';
+  const monthValue = (document.getElementById('paymentMonth') || {}).value || '';
+  let rows = (data.payments || []).filter(function(p) {
+    const text = [p.guestName, p.roomNo, p.paymentMode, p.paymentType, p.note].join(' ').toLowerCase();
+    const d = parseDisplayDate(p.dateTime);
+    return (!q || text.includes(q)) &&
+      (!dateValue || (d && toIsoDate(d) === dateValue)) &&
+      (!monthValue || (d && toIsoMonth(d) === monthValue));
+  });
+  const total = rows.reduce(function(sum, p) { return sum + Number(p.amount || 0); }, 0);
+  const totalEl = document.getElementById('paymentTotal');
+  if (totalEl) totalEl.textContent = money(total);
+  if (!q && !dateValue && !monthValue) rows = rows.slice(0, 20);
+  const body = document.getElementById('paymentRows');
+  if (!body) return;
+  body.innerHTML = rows.length ? rows.map(function(p) {
+    return '<tr>' +
+      '<td>' + esc(p.dateTime || '') + '</td>' +
+      '<td>' + esc(p.guestName || '') + '</td>' +
+      '<td>' + esc(p.roomNo || '') + '</td>' +
+      '<td>' + esc(p.paymentType || '') + '</td>' +
+      '<td>' + esc(p.paymentMode || '') + '</td>' +
+      '<td>' + money(p.amount || 0) + '</td>' +
+      '<td>' + esc(p.note || '') + '</td>' +
+    '</tr>';
+  }).join('') : '<tr><td colspan="7" class="muted">No payment records found</td></tr>';
+}
+
+function openPaymentPopup(index) {
+  const s = getStayByIndex(index);
+  if (!s) return showToast('Check-in not found');
+  const old = document.getElementById('paymentOverlay');
+  if (old) old.remove();
+  const box = document.createElement('div');
+  box.innerHTML = '<div id="paymentOverlay" class="modal-backdrop">' +
+    '<div class="detail-modal payment-modal" onclick="event.stopPropagation()">' +
+      '<div class="detail-modal-header"><h3>Payment Received</h3><button type="button" class="detail-close" onclick="document.getElementById(\'paymentOverlay\').remove()">×</button></div>' +
+      '<form id="paymentForm" class="payment-form">' +
+        '<input type="hidden" name="checkInId" value="' + esc(s.checkInId || '') + '">' +
+        '<label>Guest<input readonly value="' + esc(s.guestName || '') + '"></label>' +
+        '<label>Room<input readonly value="' + esc(s.roomNo || '') + '"></label>' +
+        '<label>Payment Mode<select name="paymentMode"><option>Cash</option><option>UPI</option><option>Card</option><option>Bank</option><option>Other</option></select></label>' +
+        '<label>Amount<input name="amount" type="number" min="1" step="0.01" required></label>' +
+        '<label class="payment-full">Note<textarea name="note"></textarea></label>' +
+        '<div class="payment-actions"><button type="button" class="btn secondary" onclick="document.getElementById(\'paymentOverlay\').remove()">Cancel</button><button type="submit" class="btn">Save Payment</button></div>' +
+      '</form></div></div>';
+  document.body.appendChild(box.firstElementChild);
+  document.getElementById('paymentForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    showPageLoader('Saving payment...');
+    google.script.run.withSuccessHandler(function(res) {
+      document.getElementById('paymentOverlay')?.remove();
+      if (res && res.data) { data = res.data; renderAll(); } else { loadData(); }
+      hidePageLoader();
+      showActionSuccess('Payment Saved');
+    }).withFailureHandler(function(err) { hidePageLoader(); handleError(err); })
+      .addPayment(Object.fromEntries(new FormData(e.target).entries()));
+  });
+}
+
+function getVacateDueSoon() {
+  const now = new Date();
+  const oneHour = now.getTime() + 60 * 60 * 1000;
+  return (data.stays || []).filter(s => {
+    const status = String(s.status || '').toUpperCase();
+    const d = parseDisplayDate(s.plannedCheckOutTime);
+    return status === 'CHECKED' && d && d.getTime() <= oneHour;
+  });
+}
+function updateVacateNotifications() {
+  const rows = getVacateDueSoon();
+  const count = document.getElementById('bellCount');
+  const panel = document.getElementById('notifyPanel');
+  if (count) {
+    count.textContent = rows.length;
+    count.classList.toggle('show', rows.length > 0);
+  }
+  if (panel) {
+    panel.innerHTML = rows.length ? rows.map(s =>
+      '<div class="notify-item"><strong>Room ' + esc(s.roomNo) + '</strong><br>' +
+      esc(s.guestName || '') + '<br><small>Planned vacate: ' + esc(s.plannedCheckOutTime || '') + '</small></div>'
+    ).join('') : '<div class="muted">No room due within one hour / overdue.</div>';
+  }
+}
+function toggleVacateNotifications() {
+  updateVacateNotifications();
+  document.getElementById('notifyPanel')?.classList.toggle('hidden');
+}
+function renderDashboardReservationDetails() {
+  const vacateEl = document.getElementById('dashboardVacateDetails');
+  const reservationEl = document.getElementById('dashboardReservationDetails');
+  if (!vacateEl && !reservationEl) return;
+
+  const soon = getVacateDueSoon();
+  const reservations = (data.Reservations || data.preBookings || [])
+    .filter(function(item) {
+      return ['RESERVED', 'BOOKED'].indexOf(String(item.status || '').toUpperCase()) > -1;
+    })
+    .slice(0, 8);
+
+  if (vacateEl) {
+    if (!soon.length) {
+      vacateEl.innerHTML = '<div class="muted" style="padding:12px">No room due within one hour / overdue.</div>';
+    } else {
+      let vacateHtml = '<table><thead><tr>' +
+        '<th>Guest</th><th>Room</th><th>Planned Vacate</th><th>Status</th>' +
+        '</tr></thead><tbody>';
+      soon.forEach(function(stay) {
+        vacateHtml += '<tr>' +
+          '<td>' + esc(stay.guestName || '') + '</td>' +
+          '<td><strong>Room ' + esc(stay.roomNo || '') + '</strong></td>' +
+          '<td>' + esc(stay.plannedCheckOutTime || '') + '</td>' +
+          '<td>' + badge(stay.status || 'CHECKED') + '</td>' +
+          '</tr>';
+      });
+      vacateHtml += '</tbody></table>';
+      vacateEl.innerHTML = vacateHtml;
+    }
+  }
+
+  if (reservationEl) {
+    if (!reservations.length) {
+      reservationEl.innerHTML = '<div class="muted" style="padding:12px">No active reservations found.</div>';
+    } else {
+      let reservationHtml = '<table><thead><tr>' +
+        '<th>Guest</th><th>Expected Time</th><th>Notes</th><th>Status</th><th>Action</th>' +
+        '</tr></thead><tbody>';
+      reservations.forEach(function(item) {
+        reservationHtml += '<tr>' +
+          '<td>' + esc(item.guestName || '') + '</td>' +
+          '<td>' + esc(item.expectedCheckIn || '') + '</td>' +
+          '<td>' + esc(item.notes || '-') + '</td>' +
+          '<td>' + badge(item.status || 'RESERVED') + '</td>' +
+          '<td><button type="button" class="btn small" onclick="viewDashboardReservation(\'' +
+            esc(item.bookingId || '') + '\')">View</button></td>' +
+          '</tr>';
+      });
+      reservationHtml += '</tbody></table>';
+      reservationEl.innerHTML = reservationHtml;
+    }
+  }
+}
+
+function viewDashboardReservation(bookingId) {
+  const item = findReservationById(bookingId);
+  if (!item) return alert('Reservation not found.');
+
+  const body = document.getElementById('detailModalBody');
+  const modal = document.getElementById('detailModal');
+  if (!body || !modal) return;
+
+  const rows = [
+    ['Reservation No', item.bookingId],
+    ['Guest', item.guestName],
+    ['Mobile', item.mobile],
+    ['Booking Mode', item.bookingMode],
+    ['Expected Check-in', item.expectedCheckIn],
+    ['Expected Check-out', item.expectedCheckOut],
+    ['Reservation Price', money(item.totalAmount || item.roomPrice || 0)],
+    ['Advance Amount', money(item.advanceAmount || 0)],
+    ['Balance Amount', money(item.balanceAmount || 0)],
+    ['Notes', item.notes || '-'],
+    ['Status', item.status]
+  ];
+
+  body.innerHTML = rows.map(function(row) {
+    return '<div class="detail-row"><span>' + esc(row[0]) + '</span><strong>' +
+      esc(row[1] || '-') + '</strong></div>';
+  }).join('');
+  modal.classList.remove('hidden');
+}
+
+function updateReservationBalancePreview() {
+  const form = document.getElementById('ReservationForm');
+  if (!form) return;
+  const priceEl = document.getElementById('ReservationPrice');
+  const price = Number(priceEl ? priceEl.value : 0) || 0;
+  const advance = Number(form.advanceAmount ? form.advanceAmount.value : 0) || 0;
+  const bal = Math.max(0, price - advance);
+  const balEl = document.getElementById('ReservationBalance');
+  if (balEl) balEl.value = bal.toFixed(2);
+}
+
+function exportGstExcel() {
+  const rows = (data.stays || []).filter(s => s.gstInvoiceNo);
+
+  if (!rows.length) {
+    showToast('No GST invoice data to export');
+    return;
+  }
+
+  let html = '<table border="1">';
+  html += '<tr>' +
+    '<th>Date</th>' +
+    '<th>Invoice No</th>' +
+    '<th>Guest</th>' +
+    '<th>Room</th>' +
+    '<th>Taxable Value</th>' +
+    '<th>CGST</th>' +
+    '<th>SGST</th>' +
+    '<th>IGST</th>' +
+    '<th>Total GST</th>' +
+    '<th>Grand Total</th>' +
+  '</tr>';
+
+  rows.forEach(s => {
+    const cgst = Number(s.cgst || 0);
+    const sgst = Number(s.sgst || 0);
+    const igst = Number(s.igst || 0);
+    const totalGst = cgst + sgst + igst;
+
+    html += '<tr>' +
+      '<td>' + esc(s.invoiceDate || s.checkInTime || '') + '</td>' +
+      '<td>' + esc(s.gstInvoiceNo || '') + '</td>' +
+      '<td>' + esc(s.guestName || '') + '</td>' +
+      '<td>' + esc(s.roomNo || '') + '</td>' +
+      '<td>' + Number(s.subTotal || 0) + '</td>' +
+      '<td>' + cgst + '</td>' +
+      '<td>' + sgst + '</td>' +
+      '<td>' + igst + '</td>' +
+      '<td>' + totalGst + '</td>' +
+      '<td>' + Number(s.total || 0) + '</td>' +
+    '</tr>';
+  });
+
+  html += '</table>';
+
+  const blob = new Blob([html], {
+    type: 'application/vnd.ms-excel'
+  });
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'GST_Report.xls';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+function handleError(error) {
+  hidePageLoader();
+  alert(error.message || error);
+  showToast(error.message || error);
+}
+function showPageLoader(text) {
+  const loader = document.getElementById('pageLoader');
+  if (!loader) return;
+
+  const loaderText = loader.querySelector('.loader-text');
+  if (loaderText) loaderText.textContent = text || 'Loading...';
+
+  loader.classList.remove('hidden');
+}
+
+function hidePageLoader() {
+  const loader = document.getElementById('pageLoader');
+  if (!loader) return;
+  loader.classList.add('hidden');
+}
+function setLoading(value) {
+  app.classList.toggle('loading', value);
+}
+
+checkLogin();
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') {
+    closeDetailModal();
+  }
+});
+function getStayId(row) {
+  return row.checkInId || row['CHECK IN ID'] || row['Check In ID'] || row.id || '';
+}
+let billMode = false;
+
+document.addEventListener('keydown', function(e) {
+  if (e.ctrlKey && e.key.toLowerCase() === 'i') {
+    e.preventDefault();
+    toggleBillMode();
+  }
+});
+
+function toggleBillMode() {
+  billMode = !billMode;
+
+  showPageLoader(billMode ? 'Opening BILL Mode...' : 'Opening GST Mode...');
+
+  document.getElementById('invoiceType').value = billMode ? 'BILL' : 'GST';
+  syncReservationModeFromGlobal();
+  document.getElementById('billModeDot')?.classList.toggle('hidden', !billMode);
+  document.getElementById('gstNavBtn').textContent = billMode ? 'SALES Report' : 'GST Report';
+  document.getElementById('historyNavBtn')?.classList.toggle('hidden', !billMode);
+
+  const title = document.querySelector('#checkin h3');
+  if (title) title.textContent = billMode ? 'New BILL Check-in' : 'New Check-in';
+
+  const gstinInput = document.getElementById('gstinInput');
+  const stateInput = document.getElementById('stateInput');
+
+  if (gstinInput) {
+    gstinInput.closest('label').classList.toggle('hidden', billMode);
+    gstinInput.required = !billMode;
+    gstinInput.value = '';
+  }
+
+  if (stateInput) {
+    stateInput.closest('label').classList.toggle('hidden', billMode);
+    stateInput.required = !billMode;
+    stateInput.value = '';
+  }
+
+  setView('checkin');
+
+  setTimeout(function() {
+    renderAll();
+    hidePageLoader();
+    showToast(billMode ? 'BILL mode enabled' : 'GST mode enabled');
+  }, 300);
+}
+</script>
+<div id="pageLoader" class="page-loader hidden">
+  <div class="loader-box">
+    <div class="green-spinner"></div>
+    <div class="loader-text">Saving...</div>
+  </div>
+</div>
+<div id="successOverlay" class="success-overlay hidden">
+  <div class="confetti">
+    <span style="--x:10%;--d:.1s;--c:#00bcd4"></span>
+    <span style="--x:20%;--d:.4s;--c:#ffc107"></span>
+    <span style="--x:32%;--d:.2s;--c:#111"></span>
+    <span style="--x:45%;--d:.6s;--c:#10b981"></span>
+    <span style="--x:58%;--d:.3s;--c:#e91e63"></span>
+    <span style="--x:72%;--d:.5s;--c:#2196f3"></span>
+    <span style="--x:85%;--d:.2s;--c:#111"></span>
+  </div>
+
+  <div class="success-card">
+    <div class="success-ring">
+      <div class="success-check">✓</div>
+    </div>
+    <h2>Check-in Successful</h2>
+    <p>Guest details saved and room status updated.</p>
+  </div>
+</div>
+<div id="toast" class="toast hidden"></div>
 </body>
 </html>

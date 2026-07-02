@@ -1,0 +1,21 @@
+node_modules/
+.vercel/
+.env
+.env.local
+*.log
+
+# Local migration/reference copies (not used by the Vercel app)
+New folder/
+Code*.txt
+Index*.txt
+Index.loading-fixed.html
+RoomStatus.updated.html
+checkin.html
+checkout.html
+dashboard.html
+payments.html
+reports.html
+reservation.html
+settings.html
+css/
+js/app.js
